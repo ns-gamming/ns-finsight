@@ -6,6 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { toast } from "sonner";
 import { User } from "@supabase/supabase-js";
 import { TrendingUp, LogOut, Plus, Moon, Sun, RefreshCw, MessageSquare, Users, Link as LinkIcon } from "lucide-react";
+import logoImage from "@/assets/ns-tracker-logo.png";
 import { AddTransactionDialog } from "@/components/AddTransactionDialog";
 import { BudgetDialog } from "@/components/BudgetDialog";
 import { FinancialChatbot } from "@/components/FinancialChatbot";
@@ -75,11 +76,9 @@ const Dashboard = () => {
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="flex items-center justify-center w-10 h-10 rounded-xl gradient-primary shadow-soft">
-                <TrendingUp className="w-5 h-5 text-white" />
-              </div>
+              <img src={logoImage} alt="NS TRACKER Logo" className="h-10 w-auto" />
               <div>
-                <h1 className="text-xl font-bold">NS Tracker</h1>
+                <h1 className="text-xl font-bold">NS TRACKER</h1>
                 <p className="text-xs text-muted-foreground">{user.email}</p>
               </div>
             </div>
