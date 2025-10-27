@@ -15,6 +15,11 @@ import { FinancialCharts } from "@/components/FinancialCharts";
 import { RecentTransactions } from "@/components/RecentTransactions";
 import { FamilyOverview } from "@/components/FamilyOverview";
 import { MarketHoldings } from "@/components/MarketHoldings";
+import { UserProfile } from "@/components/UserProfile";
+import { OrderTracking } from "@/components/OrderTracking";
+import { PreciousMetals } from "@/components/PreciousMetals";
+import { Achievements } from "@/components/Achievements";
+import { FeedbackDialog } from "@/components/FeedbackDialog";
 
 const Dashboard = () => {
   const [user, setUser] = useState<User | null>(null);
@@ -76,7 +81,9 @@ const Dashboard = () => {
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <img src={logoImage} alt="NS TRACKER Logo" className="h-10 w-auto" />
+              <div className="relative">
+                <img src={logoImage} alt="NS TRACKER Logo" className="h-12 w-12 rounded-full object-cover ring-2 ring-primary shadow-lg" />
+              </div>
               <div>
                 <h1 className="text-xl font-bold">NS TRACKER</h1>
                 <p className="text-xs text-muted-foreground">{user.email}</p>
@@ -179,8 +186,21 @@ const Dashboard = () => {
           <FamilyOverview items={dashboardData?.familySummary || []} />
         </div>
 
+        <div className="grid gap-6 md:grid-cols-2 mb-8">
+          <UserProfile />
+          <Achievements />
+        </div>
+
         <div className="mb-8">
           <MarketHoldings />
+        </div>
+
+        <div className="mb-8">
+          <PreciousMetals />
+        </div>
+
+        <div className="mb-8">
+          <OrderTracking />
         </div>
 
         <Card className="shadow-card">
@@ -204,6 +224,7 @@ const Dashboard = () => {
               <Users className="h-4 w-4" />
               Manage Family
             </Button>
+            <FeedbackDialog />
           </CardContent>
         </Card>
 

@@ -58,6 +58,45 @@ export type Database = {
           },
         ]
       }
+      achievements: {
+        Row: {
+          achieved_at: string | null
+          category: string
+          created_at: string | null
+          description: string | null
+          icon: string | null
+          id: string
+          metadata: Json | null
+          milestone_value: number | null
+          title: string
+          user_id: string
+        }
+        Insert: {
+          achieved_at?: string | null
+          category: string
+          created_at?: string | null
+          description?: string | null
+          icon?: string | null
+          id?: string
+          metadata?: Json | null
+          milestone_value?: number | null
+          title: string
+          user_id: string
+        }
+        Update: {
+          achieved_at?: string | null
+          category?: string
+          created_at?: string | null
+          description?: string | null
+          icon?: string | null
+          id?: string
+          metadata?: Json | null
+          milestone_value?: number | null
+          title?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       anomalies: {
         Row: {
           anomaly_score: number
@@ -475,6 +514,42 @@ export type Database = {
         }
         Relationships: []
       }
+      feedback: {
+        Row: {
+          category: string
+          created_at: string | null
+          description: string
+          id: string
+          metadata: Json | null
+          rating: number | null
+          status: string | null
+          title: string
+          user_id: string | null
+        }
+        Insert: {
+          category: string
+          created_at?: string | null
+          description: string
+          id?: string
+          metadata?: Json | null
+          rating?: number | null
+          status?: string | null
+          title: string
+          user_id?: string | null
+        }
+        Update: {
+          category?: string
+          created_at?: string | null
+          description?: string
+          id?: string
+          metadata?: Json | null
+          rating?: number | null
+          status?: string | null
+          title?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       goals: {
         Row: {
           created_at: string | null
@@ -600,6 +675,105 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      orders: {
+        Row: {
+          amount: number
+          category: string
+          created_at: string | null
+          currency: string | null
+          delivery_date: string | null
+          id: string
+          item_name: string
+          merchant: string | null
+          metadata: Json | null
+          notes: string | null
+          order_date: string
+          status: string | null
+          tracking_number: string | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          category: string
+          created_at?: string | null
+          currency?: string | null
+          delivery_date?: string | null
+          id?: string
+          item_name: string
+          merchant?: string | null
+          metadata?: Json | null
+          notes?: string | null
+          order_date?: string
+          status?: string | null
+          tracking_number?: string | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          category?: string
+          created_at?: string | null
+          currency?: string | null
+          delivery_date?: string | null
+          id?: string
+          item_name?: string
+          merchant?: string | null
+          metadata?: Json | null
+          notes?: string | null
+          order_date?: string
+          status?: string | null
+          tracking_number?: string | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      precious_metals: {
+        Row: {
+          created_at: string | null
+          currency: string | null
+          current_price: number | null
+          id: string
+          metadata: Json | null
+          metal_type: string
+          provider: string | null
+          purchase_date: string
+          purchase_price: number
+          quantity: number
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          currency?: string | null
+          current_price?: number | null
+          id?: string
+          metadata?: Json | null
+          metal_type: string
+          provider?: string | null
+          purchase_date: string
+          purchase_price: number
+          quantity: number
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          currency?: string | null
+          current_price?: number | null
+          id?: string
+          metadata?: Json | null
+          metal_type?: string
+          provider?: string | null
+          purchase_date?: string
+          purchase_price?: number
+          quantity?: number
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
       }
       stocks: {
         Row: {
@@ -734,32 +908,44 @@ export type Database = {
       }
       users: {
         Row: {
+          age: number | null
           created_at: string | null
           currency: string | null
+          date_of_birth: string | null
           display_name: string | null
           email: string
+          gender: string | null
           id: string
           preferences: Json | null
+          profile_picture_url: string | null
           timezone: string | null
           updated_at: string | null
         }
         Insert: {
+          age?: number | null
           created_at?: string | null
           currency?: string | null
+          date_of_birth?: string | null
           display_name?: string | null
           email: string
+          gender?: string | null
           id: string
           preferences?: Json | null
+          profile_picture_url?: string | null
           timezone?: string | null
           updated_at?: string | null
         }
         Update: {
+          age?: number | null
           created_at?: string | null
           currency?: string | null
+          date_of_birth?: string | null
           display_name?: string | null
           email?: string
+          gender?: string | null
           id?: string
           preferences?: Json | null
+          profile_picture_url?: string | null
           timezone?: string | null
           updated_at?: string | null
         }
