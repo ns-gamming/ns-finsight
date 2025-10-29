@@ -475,41 +475,134 @@ export type Database = {
           },
         ]
       }
+      family_group_members: {
+        Row: {
+          family_group_id: string
+          family_member_id: string | null
+          id: string
+          joined_at: string | null
+          permissions: Json | null
+          role: string
+          user_id: string
+        }
+        Insert: {
+          family_group_id: string
+          family_member_id?: string | null
+          id?: string
+          joined_at?: string | null
+          permissions?: Json | null
+          role?: string
+          user_id: string
+        }
+        Update: {
+          family_group_id?: string
+          family_member_id?: string | null
+          id?: string
+          joined_at?: string | null
+          permissions?: Json | null
+          role?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "family_group_members_family_group_id_fkey"
+            columns: ["family_group_id"]
+            isOneToOne: false
+            referencedRelation: "family_groups"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "family_group_members_family_member_id_fkey"
+            columns: ["family_member_id"]
+            isOneToOne: false
+            referencedRelation: "family_members"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      family_groups: {
+        Row: {
+          created_at: string | null
+          id: string
+          name: string
+          primary_user_id: string
+          settings: Json | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          name: string
+          primary_user_id: string
+          settings?: Json | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          name?: string
+          primary_user_id?: string
+          settings?: Json | null
+        }
+        Relationships: []
+      }
       family_members: {
         Row: {
           avatar_url: string | null
           created_at: string | null
           date_of_birth: string | null
+          email: string | null
           id: string
+          invite_status: string | null
+          invite_token: string | null
+          invited_at: string | null
           is_alive: boolean | null
+          joined_at: string | null
           metadata: Json | null
           name: string
+          permissions: Json | null
           relationship: string
+          role: string | null
           updated_at: string | null
+          user_account_id: string | null
           user_id: string
         }
         Insert: {
           avatar_url?: string | null
           created_at?: string | null
           date_of_birth?: string | null
+          email?: string | null
           id?: string
+          invite_status?: string | null
+          invite_token?: string | null
+          invited_at?: string | null
           is_alive?: boolean | null
+          joined_at?: string | null
           metadata?: Json | null
           name: string
+          permissions?: Json | null
           relationship: string
+          role?: string | null
           updated_at?: string | null
+          user_account_id?: string | null
           user_id: string
         }
         Update: {
           avatar_url?: string | null
           created_at?: string | null
           date_of_birth?: string | null
+          email?: string | null
           id?: string
+          invite_status?: string | null
+          invite_token?: string | null
+          invited_at?: string | null
           is_alive?: boolean | null
+          joined_at?: string | null
           metadata?: Json | null
           name?: string
+          permissions?: Json | null
           relationship?: string
+          role?: string | null
           updated_at?: string | null
+          user_account_id?: string | null
           user_id?: string
         }
         Relationships: []
@@ -730,6 +823,45 @@ export type Database = {
         }
         Relationships: []
       }
+      page_analytics: {
+        Row: {
+          created_at: string | null
+          entry_page: boolean | null
+          exit_page: boolean | null
+          id: string
+          interactions_count: number | null
+          page_path: string
+          referrer: string | null
+          scroll_depth_percent: number | null
+          time_spent_seconds: number | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          entry_page?: boolean | null
+          exit_page?: boolean | null
+          id?: string
+          interactions_count?: number | null
+          page_path: string
+          referrer?: string | null
+          scroll_depth_percent?: number | null
+          time_spent_seconds?: number | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          entry_page?: boolean | null
+          exit_page?: boolean | null
+          id?: string
+          interactions_count?: number | null
+          page_path?: string
+          referrer?: string | null
+          scroll_depth_percent?: number | null
+          time_spent_seconds?: number | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       precious_metals: {
         Row: {
           created_at: string | null
@@ -905,6 +1037,96 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      user_activity_logs: {
+        Row: {
+          created_at: string | null
+          event_action: string
+          event_category: string
+          event_label: string | null
+          event_type: string
+          id: string
+          ip_hash: string | null
+          metadata: Json | null
+          page_path: string | null
+          session_id: string | null
+          user_agent: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          event_action: string
+          event_category: string
+          event_label?: string | null
+          event_type: string
+          id?: string
+          ip_hash?: string | null
+          metadata?: Json | null
+          page_path?: string | null
+          session_id?: string | null
+          user_agent?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          event_action?: string
+          event_category?: string
+          event_label?: string | null
+          event_type?: string
+          id?: string
+          ip_hash?: string | null
+          metadata?: Json | null
+          page_path?: string | null
+          session_id?: string | null
+          user_agent?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_sessions: {
+        Row: {
+          actions_count: number | null
+          browser: string | null
+          device_type: string | null
+          duration_seconds: number | null
+          id: string
+          ip_hash: string | null
+          metadata: Json | null
+          os: string | null
+          pages_visited: number | null
+          session_end: string | null
+          session_start: string | null
+          user_id: string
+        }
+        Insert: {
+          actions_count?: number | null
+          browser?: string | null
+          device_type?: string | null
+          duration_seconds?: number | null
+          id?: string
+          ip_hash?: string | null
+          metadata?: Json | null
+          os?: string | null
+          pages_visited?: number | null
+          session_end?: string | null
+          session_start?: string | null
+          user_id: string
+        }
+        Update: {
+          actions_count?: number | null
+          browser?: string | null
+          device_type?: string | null
+          duration_seconds?: number | null
+          id?: string
+          ip_hash?: string | null
+          metadata?: Json | null
+          os?: string | null
+          pages_visited?: number | null
+          session_end?: string | null
+          session_start?: string | null
+          user_id?: string
+        }
+        Relationships: []
       }
       users: {
         Row: {

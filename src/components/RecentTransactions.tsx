@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { DateRangeFilter } from "@/components/DateRangeFilter";
 import { ArrowUpRight, ArrowDownRight } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
+import { supabase } from "@/integrations/supabase/client";
 
 interface Transaction {
   id: string;
@@ -16,13 +17,55 @@ interface Transaction {
 
 interface RecentTransactionsProps {
   transactions?: Transaction[];
+  familyMemberId?: string;
+  limit?: number;
 }
 
-export const RecentTransactions = ({ transactions = [] }: RecentTransactionsProps) => {
+export const RecentTransactions = ({ transactions, familyMemberId, limit }: RecentTransactionsProps) => {
+  const [localTransactions, setLocalTransactions] = useState<Transaction[]>(transactions || []);
   const [startDate, setStartDate] = useState<Date | undefined>();
   const [endDate, setEndDate] = useState<Date | undefined>();
 
-  const filteredTransactions = transactions.filter((t) => {
+  useEffect(() => {
+    if (familyMemberId && !transactions) {
+      fetchMemberTransactions();
+    } else if (transactions) {
+      setLocalTransactions(transactions);
+    }
+  }, [familyMemberId, transactions]);
+
+  const fetchMemberTransactions = async () => {
+    try {
+      const { data, error } = await supabase
+        .from("transactions")
+        .select(`
+          id,
+          amount,
+          type,
+          merchant,
+          timestamp
+        `)
+        .eq("family_member_id", familyMemberId)
+        .order("timestamp", { ascending: false })
+        .limit(limit || 20);
+
+      if (error) throw error;
+
+      const formatted = data?.map((t) => ({
+        id: t.id,
+        amount: Number(t.amount),
+        type: t.type,
+        merchant: t.merchant || "Unknown",
+        timestamp: t.timestamp,
+      })) || [];
+
+      setLocalTransactions(formatted);
+    } catch (error) {
+      console.error("Failed to fetch member transactions:", error);
+    }
+  };
+
+  const filteredTransactions = localTransactions.filter((t) => {
     if (!startDate && !endDate) return true;
     const txDate = new Date(t.timestamp);
     if (startDate && txDate < startDate) return false;
@@ -30,7 +73,7 @@ export const RecentTransactions = ({ transactions = [] }: RecentTransactionsProp
     return true;
   });
 
-  if (transactions.length === 0) {
+  if (localTransactions.length === 0) {
     return (
       <Card className="shadow-card">
         <CardHeader>
@@ -58,7 +101,7 @@ export const RecentTransactions = ({ transactions = [] }: RecentTransactionsProp
           {filteredTransactions.length === 0 ? (
             <p className="text-center text-muted-foreground py-8">No transactions found for this date range</p>
           ) : (
-            filteredTransactions.slice(0, 20).map((transaction) => (
+            filteredTransactions.slice(0, limit || 20).map((transaction) => (
               <div key={transaction.id} className="flex items-center justify-between p-3 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors animate-fade-in">
                 <div className="flex items-center gap-3">
                   <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
