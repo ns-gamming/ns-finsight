@@ -8,6 +8,7 @@ import { User } from "@supabase/supabase-js";
 import { TrendingUp, LogOut, Plus, Moon, Sun, RefreshCw, MessageSquare, Users, Link as LinkIcon, Shield, Keyboard } from "lucide-react";
 import logoImage from "@/assets/ns-tracker-logo.png";
 import { AddTransactionDialog } from "@/components/AddTransactionDialog";
+import { FloatingActionButton } from "@/components/FloatingActionButton";
 import { BudgetDialog } from "@/components/BudgetDialog";
 import { FinancialChatbot } from "@/components/FinancialChatbot";
 import { useDashboardData } from "@/hooks/useDashboardData";
@@ -258,6 +259,9 @@ const Dashboard = () => {
           open={showShortcuts}
           onOpenChange={setShowShortcuts}
         />
+        
+        {/* Floating Action Button for quick transaction add */}
+        <FloatingActionButton onClick={() => setShowAddTransaction(true)} />
       </main>
     </div>
   );

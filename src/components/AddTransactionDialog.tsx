@@ -97,9 +97,9 @@ export const AddTransactionDialog = ({ open, onOpenChange, onSuccess }: AddTrans
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[520px] animate-enter">
+      <DialogContent className="sm:max-w-[520px] max-h-[90vh] overflow-y-auto animate-enter">
         <DialogHeader>
-          <DialogTitle>Add Transaction</DialogTitle>
+          <DialogTitle className="text-xl">Add Transaction</DialogTitle>
           <DialogDescription>Record a new income or expense transaction</DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -158,35 +158,72 @@ export const AddTransactionDialog = ({ open, onOpenChange, onSuccess }: AddTrans
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="category">Category</Label>
               <Select value={formData.category_id} onValueChange={(value) => setFormData({ ...formData, category_id: value })}>
-                <SelectTrigger className="bg-background">
+                <SelectTrigger className="h-11 bg-background border-border">
                   <SelectValue placeholder="Select category" />
                 </SelectTrigger>
-                <SelectContent className="bg-popover border border-border z-50 max-h-[300px] overflow-y-auto">
+                <SelectContent 
+                  className="max-h-[60vh] overflow-y-auto bg-popover border-border"
+                  position="popper"
+                  sideOffset={4}
+                >
                   {categories.length === 0 ? (
-                    <div className="p-2 text-sm text-muted-foreground">No categories available</div>
+                    <div className="p-4 text-center text-sm text-muted-foreground">
+                      No categories available. Default categories will be loaded automatically.
+                    </div>
                   ) : (
-                    categories.map((c) => (
-                      <SelectItem key={c.id} value={c.id} className="cursor-pointer hover:bg-accent">{c.name}</SelectItem>
-                    ))
+                    <div className="p-1">
+                      {categories.map((c) => (
+                        <SelectItem 
+                          key={c.id} 
+                          value={c.id} 
+                          className="cursor-pointer hover:bg-accent focus:bg-accent rounded-md my-0.5 h-10 flex items-center"
+                        >
+                          <span className="flex items-center gap-2">
+                            <span className="text-base">{c.name}</span>
+                          </span>
+                        </SelectItem>
+                      ))}
+                    </div>
                   )}
                 </SelectContent>
               </Select>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="member">Family Member</Label>
+              <Label htmlFor="member">Family Member (Optional)</Label>
               <Select value={formData.family_member_id} onValueChange={(value) => setFormData({ ...formData, family_member_id: value })}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Optional" />
+                <SelectTrigger className="h-11 bg-background border-border">
+                  <SelectValue placeholder="Select family member (optional)" />
                 </SelectTrigger>
-                <SelectContent>
-                  {members.map((m) => (
-                    <SelectItem key={m.id} value={m.id}>{m.name}</SelectItem>
-                  ))}
+                <SelectContent 
+                  className="max-h-[40vh] overflow-y-auto bg-popover border-border"
+                  position="popper"
+                  sideOffset={4}
+                >
+                  {members.length === 0 ? (
+                    <div className="p-4 text-center text-sm text-muted-foreground">
+                      No family members added yet
+                    </div>
+                  ) : (
+                    <div className="p-1">
+                      <SelectItem value="" className="cursor-pointer hover:bg-accent focus:bg-accent rounded-md my-0.5 h-10">
+                        <span className="text-muted-foreground">None (Personal)</span>
+                      </SelectItem>
+                      {members.map((m) => (
+                        <SelectItem 
+                          key={m.id} 
+                          value={m.id}
+                          className="cursor-pointer hover:bg-accent focus:bg-accent rounded-md my-0.5 h-10"
+                        >
+                          {m.name}
+                        </SelectItem>
+                      ))}
+                    </div>
+                  )}
                 </SelectContent>
               </Select>
             </div>
