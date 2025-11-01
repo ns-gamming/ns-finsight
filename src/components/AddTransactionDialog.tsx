@@ -162,13 +162,17 @@ export const AddTransactionDialog = ({ open, onOpenChange, onSuccess }: AddTrans
             <div className="space-y-2">
               <Label htmlFor="category">Category</Label>
               <Select value={formData.category_id} onValueChange={(value) => setFormData({ ...formData, category_id: value })}>
-                <SelectTrigger>
+                <SelectTrigger className="bg-background">
                   <SelectValue placeholder="Select category" />
                 </SelectTrigger>
-                <SelectContent>
-                  {categories.map((c) => (
-                    <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>
-                  ))}
+                <SelectContent className="bg-popover border border-border z-50 max-h-[300px] overflow-y-auto">
+                  {categories.length === 0 ? (
+                    <div className="p-2 text-sm text-muted-foreground">No categories available</div>
+                  ) : (
+                    categories.map((c) => (
+                      <SelectItem key={c.id} value={c.id} className="cursor-pointer hover:bg-accent">{c.name}</SelectItem>
+                    ))
+                  )}
                 </SelectContent>
               </Select>
             </div>

@@ -21,7 +21,8 @@ const Index = () => {
             <img 
               src={logo} 
               alt="NS Tracker Logo" 
-              className="w-14 h-14 rounded-full shadow-lg border-2 border-primary/20 hover:border-primary/40 transition-all hover:rotate-6 hover:shadow-glow"
+              className="w-14 h-14 rounded-full shadow-lg border-2 border-primary/20 hover:border-primary/40 transition-all hover:rotate-6 hover:shadow-glow object-cover bg-transparent"
+              style={{ backgroundColor: 'transparent' }}
             />
             <span className="text-2xl font-bold bg-gradient-to-r from-primary via-primary/80 to-primary bg-clip-text text-transparent">
               NS Tracker

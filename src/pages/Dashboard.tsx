@@ -5,13 +5,19 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
 import { User } from "@supabase/supabase-js";
-import { TrendingUp, LogOut, Plus, Moon, Sun, RefreshCw, MessageSquare, Users, Link as LinkIcon, Shield } from "lucide-react";
+import { TrendingUp, LogOut, Plus, Moon, Sun, RefreshCw, MessageSquare, Users, Link as LinkIcon, Shield, Keyboard } from "lucide-react";
 import logoImage from "@/assets/ns-tracker-logo.png";
 import { AddTransactionDialog } from "@/components/AddTransactionDialog";
 import { BudgetDialog } from "@/components/BudgetDialog";
 import { FinancialChatbot } from "@/components/FinancialChatbot";
 import { useDashboardData } from "@/hooks/useDashboardData";
 import { FinancialCharts } from "@/components/FinancialCharts";
+import { AdvancedCharts } from "@/components/AdvancedCharts";
+import { ShortcutsHelp } from "@/components/ShortcutsHelp";
+import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
+import { SecurityMonitor } from "@/components/SecurityMonitor";
+import { useRealtimeUpdates } from "@/hooks/useRealtimeUpdates";
+import { QuickStats } from "@/components/QuickStats";
 import { RecentTransactions } from "@/components/RecentTransactions";
 import { FamilyOverview } from "@/components/FamilyOverview";
 import { MarketHoldings } from "@/components/MarketHoldings";
@@ -29,8 +35,37 @@ const Dashboard = () => {
   const [showAddTransaction, setShowAddTransaction] = useState(false);
   const [showBudgetDialog, setShowBudgetDialog] = useState(false);
   const [showChatbot, setShowChatbot] = useState(false);
+  const [showShortcuts, setShowShortcuts] = useState(false);
   const navigate = useNavigate();
   const { data: dashboardData, isLoading, refetch } = useDashboardData();
+
+  const toggleTheme = () => {
+    const newTheme = theme === "light" ? "dark" : "light";
+    setTheme(newTheme);
+    localStorage.setItem("theme", newTheme);
+    document.documentElement.classList.toggle("dark", newTheme === "dark");
+    toast.success(`${newTheme === "dark" ? "Dark" : "Light"} mode enabled`);
+  };
+
+  // Keyboard shortcuts
+  useKeyboardShortcuts([
+    { key: 'n', ctrlKey: true, action: () => setShowAddTransaction(true), description: 'Add transaction' },
+    { key: 'b', ctrlKey: true, action: () => setShowBudgetDialog(true), description: 'Set budget' },
+    { key: 'c', ctrlKey: true, action: () => setShowChatbot(true), description: 'Open AI advisor' },
+    { key: 'f', ctrlKey: true, action: () => navigate('/family'), description: 'View family' },
+    { key: 'r', ctrlKey: true, action: () => refetch(), description: 'Refresh data' },
+    { key: 'd', ctrlKey: true, action: toggleTheme, description: 'Toggle theme' },
+    { key: '/', ctrlKey: true, action: () => setShowShortcuts(true), description: 'Show shortcuts' },
+  ]);
+
+  // Real-time updates for transactions
+  useRealtimeUpdates({
+    table: 'transactions',
+    onInsert: () => refetch(),
+    onUpdate: () => refetch(),
+    onDelete: () => refetch(),
+    enabled: true,
+  });
 
   useEffect(() => {
     // Check authentication
@@ -65,14 +100,6 @@ const Dashboard = () => {
     } else {
       toast.success("Signed out successfully");
     }
-  };
-
-  const toggleTheme = () => {
-    const newTheme = theme === "light" ? "dark" : "light";
-    setTheme(newTheme);
-    localStorage.setItem("theme", newTheme);
-    document.documentElement.classList.toggle("dark", newTheme === "dark");
-    toast.success(`${newTheme === "dark" ? "Dark" : "Light"} mode enabled`);
   };
 
   if (!user) return null;
@@ -124,58 +151,15 @@ const Dashboard = () => {
           </Button>
         </div>
 
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4 mb-8">
-          <Card className="shadow-card animate-fade-in">
-            <CardHeader className="pb-3">
-              <CardDescription>Net Worth</CardDescription>
-              <CardTitle className="text-3xl tabular-nums">
-                {isLoading ? "..." : `₹${Number(dashboardData?.netWorth || 0).toFixed(2)}`}
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-xs text-muted-foreground">Total balance</p>
-            </CardContent>
-          </Card>
-
-          <Card className="shadow-card animate-fade-in">
-            <CardHeader className="pb-3">
-              <CardDescription>Monthly Income</CardDescription>
-              <CardTitle className="text-3xl tabular-nums text-success">
-                {isLoading ? "..." : `₹${Number(dashboardData?.monthlyIncome || 0).toFixed(2)}`}
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-xs text-muted-foreground">This month</p>
-            </CardContent>
-          </Card>
-
-          <Card className="shadow-card animate-fade-in">
-            <CardHeader className="pb-3">
-              <CardDescription>Monthly Expenses</CardDescription>
-              <CardTitle className="text-3xl tabular-nums text-destructive">
-                {isLoading ? "..." : `₹${Number(dashboardData?.monthlyExpenses || 0).toFixed(2)}`}
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-xs text-muted-foreground">This month</p>
-            </CardContent>
-          </Card>
-
-          <Card className="shadow-card animate-fade-in">
-            <CardHeader className="pb-3">
-              <CardDescription>Savings Rate</CardDescription>
-              <CardTitle className="text-3xl tabular-nums">
-                {isLoading ? "..." : `${Number(dashboardData?.savingsRate || 0).toFixed(0)}%`}
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-xs text-muted-foreground">This month</p>
-            </CardContent>
-          </Card>
-        </div>
+        <QuickStats
+          netWorth={dashboardData?.netWorth || 0}
+          monthlyIncome={dashboardData?.monthlyIncome || 0}
+          monthlyExpenses={dashboardData?.monthlyExpenses || 0}
+          savingsRate={dashboardData?.savingsRate || 0}
+        />
 
         <div className="mb-8">
-          <FinancialCharts
+          <AdvancedCharts
             monthlyTrend={dashboardData?.monthlyTrend}
             categoryBreakdown={dashboardData?.categoryBreakdown}
           />
@@ -193,6 +177,10 @@ const Dashboard = () => {
 
         <div className="grid gap-6 md:grid-cols-2 mb-8">
           <UserProfile />
+          <SecurityMonitor />
+        </div>
+
+        <div className="mb-8">
           <Achievements />
         </div>
 
@@ -242,7 +230,10 @@ const Dashboard = () => {
               <Users className="h-4 w-4" />
               Manage Family
             </Button>
-            <FeedbackDialog />
+              <Button variant="outline" className="gap-2 hover:scale-105 transition-transform" onClick={() => setShowShortcuts(true)}>
+                <Keyboard className="h-4 w-4" />
+                Keyboard Shortcuts
+              </Button>
           </CardContent>
         </Card>
 
@@ -261,6 +252,11 @@ const Dashboard = () => {
         <FinancialChatbot
           open={showChatbot}
           onOpenChange={setShowChatbot}
+        />
+
+        <ShortcutsHelp
+          open={showShortcuts}
+          onOpenChange={setShowShortcuts}
         />
       </main>
     </div>

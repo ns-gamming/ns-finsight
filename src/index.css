@@ -173,4 +173,12 @@ All colors MUST be HSL.
   .animate-enter {
     animation: fade-in-up 0.3s ease-out;
   }
+
+  .shadow-glow {
+    box-shadow: 0 0 20px hsl(var(--primary) / 0.3);
+  }
+
+  .hover:shadow-glow:hover {
+    box-shadow: 0 0 30px hsl(var(--primary) / 0.5);
+  }
 }
