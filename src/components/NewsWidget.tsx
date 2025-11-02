@@ -93,7 +93,7 @@ export const NewsWidget = () => {
                 href={article.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="block p-4 rounded-lg border border-border bg-card/50 backdrop-blur-sm hover:bg-accent hover:scale-[1.02] transition-all duration-300 group animate-fade-in-up"
+                className="block p-4 rounded-lg border border-border bg-gradient-to-r from-card/80 to-card/50 backdrop-blur-sm hover:from-accent hover:to-accent/50 hover:scale-[1.02] hover:shadow-lg transition-all duration-300 group animate-fade-in"
                 style={{ animationDelay: `${index * 100}ms` }}
               >
                 <div className="flex items-start justify-between gap-3">

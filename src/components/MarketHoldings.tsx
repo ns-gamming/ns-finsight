@@ -114,17 +114,49 @@ export const MarketHoldings = () => {
     }
   };
 
-  const renderList = (title: string, items: any[], type: 'stock' | 'crypto') => (
-    <Card className="shadow-card">
-      <CardHeader>
-        <div className="flex items-center justify-between">
-          <div>
-            <CardTitle>{title}</CardTitle>
-            <CardDescription>Your {title.toLowerCase()} holdings</CardDescription>
+  const renderList = (title: string, items: any[], type: 'stock' | 'crypto') => {
+    const totalValue = items.reduce((sum, it) => {
+      const price = prices[it.symbol?.toUpperCase()] ?? it.current_price ?? it.purchase_price;
+      return sum + (Number(price) * Number(it.quantity));
+    }, 0);
+    const totalInvested = items.reduce((sum, it) => sum + (Number(it.purchase_price) * Number(it.quantity)), 0);
+    const totalPnL = totalValue - totalInvested;
+
+    return (
+      <Card className="shadow-card animate-fade-in hover:shadow-lg transition-all duration-300">
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <div>
+              <CardTitle className="flex items-center gap-2">
+                {type === 'stock' ? '📈' : '₿'} {title}
+              </CardTitle>
+              <CardDescription>Your {title.toLowerCase()} portfolio</CardDescription>
+            </div>
+            <Button variant="outline" onClick={() => setAdding({ type })} className="hover:bg-primary hover:text-primary-foreground transition-all">
+              + Add
+            </Button>
           </div>
-          <Button variant="outline" onClick={() => setAdding({ type })}>Add</Button>
-        </div>
-      </CardHeader>
+          {items.length > 0 && (
+            <div className="mt-4 p-4 rounded-lg bg-gradient-to-r from-primary/10 to-primary/5 border border-primary/20">
+              <div className="grid grid-cols-3 gap-4 text-center">
+                <div>
+                  <p className="text-xs text-muted-foreground mb-1">Total Value</p>
+                  <p className="text-lg font-bold">₹{totalValue.toFixed(2)}</p>
+                </div>
+                <div>
+                  <p className="text-xs text-muted-foreground mb-1">Invested</p>
+                  <p className="text-lg font-bold">₹{totalInvested.toFixed(2)}</p>
+                </div>
+                <div>
+                  <p className="text-xs text-muted-foreground mb-1">Total P&L</p>
+                  <p className={`text-lg font-bold ${totalPnL >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                    {totalPnL >= 0 ? '+' : ''}₹{totalPnL.toFixed(2)}
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+        </CardHeader>
       <CardContent>
         {adding.type === type && (
           <form onSubmit={addHolding} className="grid sm:grid-cols-5 gap-3 mb-4 animate-enter">
@@ -180,17 +212,38 @@ export const MarketHoldings = () => {
             const currentValue = price ? Number(price) * Number(it.quantity) : null;
             const invested = Number(it.purchase_price) * Number(it.quantity);
             const pnl = currentValue !== null ? currentValue - invested : null;
+            const pnlPercent = invested > 0 ? ((pnl || 0) / invested) * 100 : 0;
             const currencySymbol = it.currency === "INR" ? "₹" : it.currency === "USD" ? "$" : "€";
             return (
-              <div key={it.id} className="p-3 rounded-lg border border-border bg-card/50 flex items-center justify-between">
-                <div>
-                  <div className="font-medium">{it.symbol} • {it.name}</div>
-                  <div className="text-xs text-muted-foreground">Qty {Number(it.quantity)} @ {currencySymbol}{Number(it.purchase_price).toFixed(2)}</div>
-                </div>
-                <div className="text-right">
-                  <div className="text-sm">Price: {price ? `${currencySymbol}${Number(price).toFixed(2)}` : '—'}</div>
-                  <div className={`text-sm ${pnl !== null ? (pnl >= 0 ? 'text-success' : 'text-destructive') : ''}`}>
-                    {pnl !== null ? `PnL: ${currencySymbol}${pnl.toFixed(2)}` : 'PnL: —'}
+              <div key={it.id} className="p-4 rounded-lg border border-border bg-card/50 hover:bg-accent/50 hover:scale-[1.01] transition-all duration-200 animate-fade-in">
+                <div className="flex items-start justify-between">
+                  <div className="flex-1">
+                    <div className="font-semibold text-base mb-1">{it.symbol}</div>
+                    <div className="text-xs text-muted-foreground mb-2">{it.name}</div>
+                    <div className="flex items-center gap-2 text-xs">
+                      <span className="px-2 py-1 rounded bg-primary/10">
+                        Qty: {Number(it.quantity).toFixed(4)}
+                      </span>
+                      <span className="px-2 py-1 rounded bg-muted">
+                        Buy: {currencySymbol}{Number(it.purchase_price).toFixed(2)}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-sm font-medium mb-1">
+                      {price ? `${currencySymbol}${Number(price).toFixed(2)}` : '—'}
+                    </div>
+                    {pnl !== null && (
+                      <div className={`text-sm font-bold ${pnl >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                        {pnl >= 0 ? '+' : ''}{currencySymbol}{pnl.toFixed(2)}
+                        <span className="text-xs ml-1">({pnlPercent >= 0 ? '+' : ''}{pnlPercent.toFixed(1)}%)</span>
+                      </div>
+                    )}
+                    {currentValue !== null && (
+                      <div className="text-xs text-muted-foreground mt-1">
+                        Value: {currencySymbol}{currentValue.toFixed(2)}
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -199,7 +252,8 @@ export const MarketHoldings = () => {
         </div>
       </CardContent>
     </Card>
-  );
+    );
+  };
 
   return (
     <div className="grid gap-6 md:grid-cols-2">

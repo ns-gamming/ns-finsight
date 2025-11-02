@@ -57,14 +57,42 @@ serve(async (req) => {
       .select('*')
       .eq('user_id', user.id);
 
+    // Fetch all assets
+    const { data: assets } = await supabaseClient
+      .from('assets')
+      .select('*')
+      .eq('user_id', user.id);
+
+    // Fetch stocks and crypto
+    const { data: stocks } = await supabaseClient
+      .from('stocks')
+      .select('*')
+      .eq('user_id', user.id);
+
+    const { data: crypto } = await supabaseClient
+      .from('crypto')
+      .select('*')
+      .eq('user_id', user.id);
+
     // Fetch family members
     const { data: familyMembers } = await supabaseClient
       .from('family_members')
       .select('id, name, is_alive')
       .eq('user_id', user.id);
 
-    // Calculate net worth (sum of all account balances)
-    const netWorth = accounts?.reduce((sum, acc) => sum + parseFloat((acc.balance as any) || 0), 0) || 0;
+    // Calculate net worth (accounts + assets + stocks + crypto)
+    const accountBalance = accounts?.reduce((sum, acc) => sum + parseFloat((acc.balance as any) || 0), 0) || 0;
+    const assetValue = assets?.reduce((sum, asset) => sum + parseFloat((asset.value as any) || 0), 0) || 0;
+    const stockValue = stocks?.reduce((sum, stock) => {
+      const currentPrice = parseFloat((stock.current_price as any) || stock.purchase_price);
+      return sum + (currentPrice * parseFloat((stock.quantity as any) || 0));
+    }, 0) || 0;
+    const cryptoValue = crypto?.reduce((sum, coin) => {
+      const currentPrice = parseFloat((coin.current_price as any) || coin.purchase_price);
+      return sum + (currentPrice * parseFloat((coin.quantity as any) || 0));
+    }, 0) || 0;
+    
+    const netWorth = accountBalance + assetValue + stockValue + cryptoValue;
 
     // Calculate income and expenses for last 30 days
     const income = recentTransactions

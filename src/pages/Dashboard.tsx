@@ -29,6 +29,9 @@ import { Achievements } from "@/components/Achievements";
 import { FeedbackDialog } from "@/components/FeedbackDialog";
 import { NewsWidget } from "@/components/NewsWidget";
 import { AdSense } from "@/components/AdSense";
+import { FinancialTips } from "@/components/FinancialTips";
+import { RealityCheck } from "@/components/RealityCheck";
+import { NotesWidget } from "@/components/NotesWidget";
 
 const Dashboard = () => {
   const [user, setUser] = useState<User | null>(null);
@@ -193,9 +196,15 @@ const Dashboard = () => {
           <div className="lg:col-span-2">
             <MarketHoldings />
           </div>
-          <div>
+          <div className="space-y-6">
             <NewsWidget />
+            <NotesWidget />
           </div>
+        </div>
+
+        <div className="grid gap-6 lg:grid-cols-2 mb-8">
+          <FinancialTips />
+          <RealityCheck />
         </div>
 
         <div className="mb-8">

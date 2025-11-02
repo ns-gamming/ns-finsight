@@ -33,6 +33,18 @@ export const AddTransactionDialog = ({ open, onOpenChange, onSuccess }: AddTrans
     family_member_id: "",
   });
 
+  // Filter categories based on transaction type
+  const filteredCategories = categories.filter(cat => {
+    const name = cat.name.toLowerCase();
+    if (formData.type === "income") {
+      return ["salary", "bonus", "investment", "freelance", "business", "rental", "refund", "gift"].some(keyword => name.includes(keyword));
+    } else if (formData.type === "savings") {
+      return ["savings", "investment", "retirement", "emergency"].some(keyword => name.includes(keyword));
+    }
+    // For expense, show all expense-related categories
+    return !["salary", "bonus", "investment income", "freelance", "business income", "rental income"].some(keyword => name.includes(keyword));
+  });
+
   useEffect(() => {
     const load = async () => {
       const userId = (await supabase.auth.getUser()).data.user?.id;
@@ -97,24 +109,32 @@ export const AddTransactionDialog = ({ open, onOpenChange, onSuccess }: AddTrans
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[520px] max-h-[90vh] overflow-y-auto animate-enter">
-        <DialogHeader>
-          <DialogTitle className="text-xl">Add Transaction</DialogTitle>
-          <DialogDescription>Record a new income or expense transaction</DialogDescription>
+      <DialogContent className="sm:max-w-[520px] max-h-[90vh] overflow-y-auto animate-enter backdrop-blur-sm">
+        <DialogHeader className="space-y-2">
+          <DialogTitle className="text-xl font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
+            Add Transaction
+          </DialogTitle>
+          <DialogDescription className="text-sm">
+            Record a new transaction - income, expense, or savings
+          </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="type">Type</Label>
-              <Select value={formData.type} onValueChange={(value) => setFormData({ ...formData, type: value })}>
-                <SelectTrigger>
+              <Label htmlFor="type" className="text-sm font-medium">Transaction Type</Label>
+              <Select value={formData.type} onValueChange={(value) => setFormData({ ...formData, type: value, category_id: "" })}>
+                <SelectTrigger className="transition-all hover:border-primary">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="income">Income</SelectItem>
-                  <SelectItem value="expense">Expense</SelectItem>
+                  <SelectItem value="income">💰 Income</SelectItem>
+                  <SelectItem value="expense">💸 Expense</SelectItem>
+                  <SelectItem value="savings">🏦 Savings</SelectItem>
                 </SelectContent>
               </Select>
+              <p className="text-xs text-muted-foreground">
+                {formData.type === "income" ? "Money coming in" : formData.type === "savings" ? "Money saved" : "Money spent"}
+              </p>
             </div>
 
             <div className="space-y-2">
@@ -160,27 +180,29 @@ export const AddTransactionDialog = ({ open, onOpenChange, onSuccess }: AddTrans
 
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="category">Category</Label>
+              <Label htmlFor="category" className="text-sm font-medium">
+                Category {formData.type && `(${formData.type} categories)`}
+              </Label>
               <Select value={formData.category_id} onValueChange={(value) => setFormData({ ...formData, category_id: value })}>
-                <SelectTrigger className="h-11 bg-background border-border">
-                  <SelectValue placeholder="Select category" />
+                <SelectTrigger className="h-11 bg-background border-border transition-all hover:border-primary">
+                  <SelectValue placeholder={`Select ${formData.type} category`} />
                 </SelectTrigger>
                 <SelectContent 
                   className="max-h-[60vh] overflow-y-auto bg-popover border-border"
                   position="popper"
                   sideOffset={4}
                 >
-                  {categories.length === 0 ? (
+                  {filteredCategories.length === 0 ? (
                     <div className="p-4 text-center text-sm text-muted-foreground">
-                      No categories available. Default categories will be loaded automatically.
+                      No {formData.type} categories available yet
                     </div>
                   ) : (
                     <div className="p-1">
-                      {categories.map((c) => (
+                      {filteredCategories.map((c) => (
                         <SelectItem 
                           key={c.id} 
                           value={c.id} 
-                          className="cursor-pointer hover:bg-accent focus:bg-accent rounded-md my-0.5 h-10 flex items-center"
+                          className="cursor-pointer hover:bg-accent focus:bg-accent rounded-md my-0.5 h-10 flex items-center transition-all"
                         >
                           <span className="flex items-center gap-2">
                             <span className="text-base">{c.name}</span>
@@ -191,6 +213,11 @@ export const AddTransactionDialog = ({ open, onOpenChange, onSuccess }: AddTrans
                   )}
                 </SelectContent>
               </Select>
+              {formData.category_id === "" && (
+                <p className="text-xs text-muted-foreground animate-fade-in">
+                  💡 Tip: Choose a category that best matches this {formData.type}
+                </p>
+              )}
             </div>
 
             <div className="space-y-2">
