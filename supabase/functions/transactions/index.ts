@@ -31,12 +31,27 @@ serve(async (req) => {
       throw new Error('Unauthorized');
     }
 
-    const { amount, currency, type, merchant, notes, category_id, account_id, timestamp, tags, family_member_id } = await req.json();
+    const { amount, currency, type, merchant, notes, description, category_id, account_id, timestamp, tags, family_member_id, payment_source } = await req.json();
 
     // Validate required fields
     if (!amount || !type) {
       throw new Error('Missing required fields: amount, type');
     }
+
+    // Validate amount
+    const amountNum = parseFloat(amount);
+    if (isNaN(amountNum) || amountNum <= 0) {
+      throw new Error('Amount must be a positive number');
+    }
+
+    // Sanitize string inputs
+    const sanitizedMerchant = merchant?.trim().substring(0, 255);
+    const sanitizedNotes = notes?.trim().substring(0, 1000);
+    const sanitizedDescription = description?.trim().substring(0, 1000);
+
+    // Map savings to expense for DB constraint, store original in metadata
+    const dbType = type === 'savings' ? 'expense' : type;
+    const originalType = type;
 
     // Get client IP and hash it
     const clientIP = req.headers.get('x-forwarded-for')?.split(',')[0] || 
@@ -46,23 +61,61 @@ serve(async (req) => {
     const salt = Deno.env.get('IP_HASH_SALT') || 'default-salt';
     const ipHash = createHash('sha256').update(salt + clientIP).digest('hex');
 
+    // Currency conversion for non-INR
+    const userCurrency = currency || 'INR';
+    let baseAmount = amountNum;
+    let exchangeRate = 1;
+
+    if (userCurrency !== 'INR') {
+      try {
+        // Handle USDT as USD equivalent for conversion
+        const convertFrom = userCurrency === 'USDT' ? 'USD' : userCurrency;
+        
+        const conversionResponse = await fetch(
+          `https://api.exchangerate-api.com/v4/latest/${convertFrom}`
+        );
+        
+        if (conversionResponse.ok) {
+          const conversionData = await conversionResponse.json();
+          exchangeRate = conversionData.rates['INR'] || 1;
+          baseAmount = amountNum * exchangeRate;
+        }
+      } catch (convError) {
+        console.error('Currency conversion error:', convError);
+        // Continue with original amount if conversion fails
+      }
+    }
+
+    // Prepare metadata
+    const metadata: any = {
+      original_type: originalType,
+      description: sanitizedDescription,
+      payment_source: payment_source,
+    };
+
+    if (userCurrency !== 'INR') {
+      metadata.exchange_rate = exchangeRate;
+      metadata.base_currency = 'INR';
+      metadata.base_amount = baseAmount;
+    }
+
     // Insert transaction
     const { data: transaction, error: transactionError } = await supabaseClient
       .from('transactions')
       .insert({
         user_id: user.id,
-        amount: parseFloat(amount),
-        currency: currency || 'INR',
-        type,
-        merchant,
-        notes,
+        amount: amountNum,
+        currency: userCurrency,
+        type: dbType,
+        merchant: sanitizedMerchant,
+        notes: sanitizedNotes,
         category_id,
         account_id,
         timestamp: timestamp || new Date().toISOString(),
         tags,
         family_member_id,
         ip_hash: ipHash,
-        metadata: {},
+        metadata,
       })
       .select()
       .single();

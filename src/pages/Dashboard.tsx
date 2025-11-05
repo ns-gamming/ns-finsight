@@ -12,7 +12,7 @@ import { FloatingActionButton } from "@/components/FloatingActionButton";
 import { BudgetDialog } from "@/components/BudgetDialog";
 import { FinancialChatbot } from "@/components/FinancialChatbot";
 import { useDashboardData } from "@/hooks/useDashboardData";
-import { FinancialCharts } from "@/components/FinancialCharts";
+import { EnhancedFinancialCharts } from "@/components/EnhancedFinancialCharts";
 import { AdvancedCharts } from "@/components/AdvancedCharts";
 import { ShortcutsHelp } from "@/components/ShortcutsHelp";
 import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";

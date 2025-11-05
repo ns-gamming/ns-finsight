@@ -1,0 +1,106 @@
+-- Seed default categories for all transaction types
+-- This migration is idempotent - it won't create duplicates
+
+-- Create unique index on slug to prevent duplicates
+CREATE UNIQUE INDEX IF NOT EXISTS categories_slug_unique ON public.categories(slug);
+
+-- Expense Categories
+INSERT INTO public.categories (name, slug, category_type, icon, color, user_id) VALUES
+('Food & Dining', 'food_dining', 'expense', '🍽️', '#ef4444', NULL),
+('Groceries', 'groceries', 'expense', '🛒', '#f97316', NULL),
+('Transportation', 'transportation', 'expense', '🚗', '#f59e0b', NULL),
+('Fuel', 'fuel', 'expense', '⛽', '#eab308', NULL),
+('Shopping', 'shopping', 'expense', '🛍️', '#84cc16', NULL),
+('Entertainment', 'entertainment', 'expense', '🎬', '#22c55e', NULL),
+('Utilities', 'utilities', 'expense', '💡', '#10b981', NULL),
+('Rent', 'rent', 'expense', '🏠', '#14b8a6', NULL),
+('EMI/Loan', 'emi_loan', 'expense', '💳', '#06b6d4', NULL),
+('Insurance', 'insurance', 'expense', '🛡️', '#0ea5e9', NULL),
+('Healthcare', 'healthcare', 'expense', '🏥', '#3b82f6', NULL),
+('Education', 'education', 'expense', '📚', '#6366f1', NULL),
+('Subscriptions', 'subscriptions', 'expense', '📱', '#8b5cf6', NULL),
+('Taxes', 'taxes', 'expense', '🧾', '#a855f7', NULL),
+('Travel', 'travel', 'expense', '✈️', '#c026d3', NULL),
+('Charity', 'charity', 'expense', '❤️', '#d946ef', NULL),
+('Pets', 'pets', 'expense', '🐾', '#ec4899', NULL),
+('Home Maintenance', 'home_maintenance', 'expense', '🔧', '#f43f5e', NULL),
+('Electronics', 'electronics', 'expense', '💻', '#fb7185', NULL),
+('Gifts', 'gifts', 'expense', '🎁', '#fda4af', NULL),
+('Personal Care', 'personal_care', 'expense', '💅', '#f472b6', NULL),
+('Fitness', 'fitness', 'expense', '💪', '#38bdf8', NULL),
+('Clothing', 'clothing', 'expense', '👕', '#818cf8', NULL),
+('Books', 'books', 'expense', '📖', '#c084fc', NULL),
+('Hobbies', 'hobbies', 'expense', '🎨', '#e879f9', NULL),
+('Coffee & Tea', 'coffee_tea', 'expense', '☕', '#d97706', NULL),
+('Beauty', 'beauty', 'expense', '💄', '#be185d', NULL),
+('Parking', 'parking', 'expense', '🅿️', '#475569', NULL),
+('Laundry', 'laundry', 'expense', '🧺', '#64748b', NULL),
+('Sports', 'sports', 'expense', '⚽', '#0284c7', NULL),
+('Music', 'music', 'expense', '🎵', '#7c3aed', NULL),
+('Gaming', 'gaming', 'expense', '🎮', '#9333ea', NULL),
+('Photography', 'photography', 'expense', '📷', '#a21caf', NULL),
+('Office Supplies', 'office_supplies', 'expense', '📎', '#94a3b8', NULL),
+('Legal', 'legal', 'expense', '⚖️', '#475569', NULL),
+('Donations', 'donations', 'expense', '🙏', '#e11d48', NULL),
+('Repairs', 'repairs', 'expense', '🔨', '#dc2626', NULL),
+('Internet', 'internet', 'expense', '🌐', '#2563eb', NULL),
+('Phone Bill', 'phone_bill', 'expense', '📞', '#4f46e5', NULL),
+('Miscellaneous', 'miscellaneous_expense', 'expense', '📦', '#71717a', NULL)
+ON CONFLICT (slug) DO NOTHING;
+
+-- Income Categories
+INSERT INTO public.categories (name, slug, category_type, icon, color, user_id) VALUES
+('Salary', 'salary', 'income', '💰', '#10b981', NULL),
+('Freelance', 'freelance', 'income', '💼', '#14b8a6', NULL),
+('Business Income', 'business_income', 'income', '🏢', '#06b6d4', NULL),
+('Investment Returns', 'investment_returns', 'income', '📈', '#0ea5e9', NULL),
+('Rental Income', 'rental_income', 'income', '🏠', '#3b82f6', NULL),
+('Dividends', 'dividends', 'income', '💵', '#6366f1', NULL),
+('Interest Income', 'interest_income', 'income', '🏦', '#8b5cf6', NULL),
+('Bonus', 'bonus', 'income', '🎉', '#a855f7', NULL),
+('Commission', 'commission', 'income', '💳', '#c026d3', NULL),
+('Refunds', 'refunds', 'income', '↩️', '#d946ef', NULL),
+('Gifts Received', 'gifts_received', 'income', '🎁', '#ec4899', NULL),
+('Pension', 'pension', 'income', '👴', '#f43f5e', NULL),
+('Grants', 'grants', 'income', '🎓', '#22c55e', NULL),
+('Consulting', 'consulting', 'income', '🤝', '#84cc16', NULL),
+('Side Hustle', 'side_hustle', 'income', '🚀', '#eab308', NULL),
+('Royalties', 'royalties', 'income', '📚', '#f59e0b', NULL),
+('Cashback', 'cashback', 'income', '💰', '#f97316', NULL),
+('Awards', 'awards', 'income', '🏆', '#ef4444', NULL),
+('Inheritance', 'inheritance', 'income', '💎', '#be123c', NULL),
+('Stock Sale', 'stock_sale', 'income', '📊', '#0891b2', NULL),
+('Crypto Gains', 'crypto_gains', 'income', '₿', '#7c3aed', NULL),
+('Part-time Job', 'parttime_job', 'income', '⏰', '#059669', NULL),
+('Teaching', 'teaching', 'income', '👨‍🏫', '#16a34a', NULL),
+('Content Creation', 'content_creation', 'income', '🎥', '#65a30d', NULL),
+('Miscellaneous', 'miscellaneous_income', 'income', '📦', '#71717a', NULL)
+ON CONFLICT (slug) DO NOTHING;
+
+-- Savings Categories
+INSERT INTO public.categories (name, slug, category_type, icon, color, user_id) VALUES
+('Emergency Fund', 'emergency_fund', 'savings', '🚨', '#dc2626', NULL),
+('Retirement', 'retirement', 'savings', '🏖️', '#ea580c', NULL),
+('Education Fund', 'education_fund', 'savings', '🎓', '#d97706', NULL),
+('Home Fund', 'home_fund', 'savings', '🏡', '#ca8a04', NULL),
+('Car Fund', 'car_fund', 'savings', '🚙', '#a16207', NULL),
+('Vacation Fund', 'vacation_fund', 'savings', '✈️', '#15803d', NULL),
+('Fixed Deposit', 'fixed_deposit', 'savings', '🏦', '#047857', NULL),
+('Mutual Funds', 'mutual_funds', 'savings', '📊', '#0f766e', NULL),
+('Stock Savings', 'stock_savings', 'savings', '📈', '#0e7490', NULL),
+('Crypto Savings', 'crypto_savings', 'savings', '₿', '#0369a1', NULL),
+('Digital Gold', 'digital_gold', 'savings', '🪙', '#075985', NULL),
+('Recurring Deposit', 'recurring_deposit', 'savings', '💰', '#1e40af', NULL),
+('Insurance Premium', 'insurance_premium', 'savings', '🛡️', '#1e3a8a', NULL),
+('PPF', 'ppf', 'savings', '🇮🇳', '#3730a3', NULL),
+('NPS', 'nps', 'savings', '📋', '#4c1d95', NULL),
+('Bonds', 'bonds', 'savings', '📜', '#5b21b6', NULL),
+('SIP', 'sip', 'savings', '💹', '#6b21a8', NULL),
+('Real Estate', 'real_estate', 'savings', '🏗️', '#86198f', NULL),
+('Wedding Fund', 'wedding_fund', 'savings', '💒', '#a21caf', NULL),
+('Medical Fund', 'medical_fund', 'savings', '⚕️', '#be185d', NULL),
+('Tax Savings', 'tax_savings', 'savings', '📑', '#9f1239', NULL),
+('Contingency Fund', 'contingency_fund', 'savings', '💼', '#881337', NULL),
+('General Savings', 'general_savings', 'savings', '💾', '#059669', NULL),
+('Miscellaneous', 'miscellaneous_savings', 'savings', '📦', '#71717a', NULL)
+ON CONFLICT (slug) DO NOTHING;

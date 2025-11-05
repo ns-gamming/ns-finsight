@@ -24,32 +24,56 @@ serve(async (req) => {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) throw new Error("Unauthorized");
 
-    // Use free API for prices
+    // Cache implementation (60 seconds)
+    const cache = new Map<string, { price: number; timestamp: number }>();
+    const CACHE_TTL = 60 * 1000; // 60 seconds
+    
     const prices: Record<string, number> = {};
+    const lastUpdated = new Date().toISOString();
     
     if (type === "crypto") {
-      // Use CoinGecko free API
+      // Use CoinGecko free API with INR support
       for (const symbol of symbols) {
+        const cacheKey = `crypto:${symbol}`;
+        const cached = cache.get(cacheKey);
+        
+        if (cached && Date.now() - cached.timestamp < CACHE_TTL) {
+          prices[symbol] = cached.price;
+          continue;
+        }
+
         try {
           const response = await fetch(
-            `https://api.coingecko.com/api/v3/simple/price?ids=${symbol.toLowerCase()}&vs_currencies=usd`
+            `https://api.coingecko.com/api/v3/simple/price?ids=${symbol.toLowerCase()}&vs_currencies=inr,usd`
           );
           const data = await response.json();
-          prices[symbol] = data[symbol.toLowerCase()]?.usd || 0;
+          const price = data[symbol.toLowerCase()]?.inr || data[symbol.toLowerCase()]?.usd * 83 || 0;
+          prices[symbol] = price;
+          cache.set(cacheKey, { price, timestamp: Date.now() });
         } catch (error) {
           console.error(`Error fetching ${symbol}:`, error);
-          prices[symbol] = 0;
+          prices[symbol] = cached?.price || 0;
         }
       }
     } else if (type === "stock") {
-      // For stocks, return mock data (free stock APIs have rate limits)
+      // For stocks, use cached/mock data with timestamp
       for (const symbol of symbols) {
-        prices[symbol] = Math.random() * 1000; // Mock price
+        const cacheKey = `stock:${symbol}`;
+        const cached = cache.get(cacheKey);
+        
+        if (cached && Date.now() - cached.timestamp < CACHE_TTL) {
+          prices[symbol] = cached.price;
+        } else {
+          // Mock price - in production, integrate a real API
+          const price = Math.random() * 1000;
+          prices[symbol] = price;
+          cache.set(cacheKey, { price, timestamp: Date.now() });
+        }
       }
     }
 
     return new Response(
-      JSON.stringify({ prices }),
+      JSON.stringify({ prices, lastUpdated }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   } catch (error: any) {

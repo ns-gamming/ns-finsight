@@ -17,3 +17,6 @@ verify_jwt = true
 
 [functions.fetch-news]
 verify_jwt = false
+
+[functions.currency-converter]
+verify_jwt = false

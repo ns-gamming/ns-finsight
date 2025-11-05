@@ -36,7 +36,11 @@ export const UnifiedAssetDialog = ({ open, onOpenChange, onSuccess }: UnifiedAss
     quantity: "",
     purchase_price: "",
     platform: "",
-    currency: "USD"
+    currency: "USD",
+    wallet_address: "",
+    network: "",
+    fee: "",
+    tx_hash: "",
   });
 
   // Precious metal form
@@ -71,13 +75,19 @@ export const UnifiedAssetDialog = ({ open, onOpenChange, onSuccess }: UnifiedAss
         if (error) throw error;
         toast.success("Stock added successfully! 📈");
       } else if (assetType === "crypto") {
+        const metadata: any = {};
+        if (cryptoForm.network) metadata.network = cryptoForm.network;
+        if (cryptoForm.fee) metadata.fee = parseFloat(cryptoForm.fee);
+        if (cryptoForm.tx_hash) metadata.tx_hash = cryptoForm.tx_hash;
+
         const { error } = await supabase.from("crypto").insert({
           user_id: user.id,
           symbol: cryptoForm.symbol.toUpperCase(),
           name: cryptoForm.name,
           quantity: parseFloat(cryptoForm.quantity),
           purchase_price: parseFloat(cryptoForm.purchase_price),
-          platform: cryptoForm.platform,
+          platform: cryptoForm.platform || null,
+          wallet_address: cryptoForm.wallet_address || null,
           currency: cryptoForm.currency,
           current_price: parseFloat(cryptoForm.purchase_price), // Initial price
         });
@@ -100,7 +110,7 @@ export const UnifiedAssetDialog = ({ open, onOpenChange, onSuccess }: UnifiedAss
 
       // Reset forms
       setStockForm({ symbol: "", name: "", quantity: "", purchase_price: "", exchange: "", currency: "USD" });
-      setCryptoForm({ symbol: "", name: "", quantity: "", purchase_price: "", platform: "", currency: "USD" });
+      setCryptoForm({ symbol: "", name: "", quantity: "", purchase_price: "", platform: "", currency: "USD", wallet_address: "", network: "", fee: "", tx_hash: "" });
       setMetalForm({ metal_type: "gold", quantity: "", purchase_price: "", provider: "", currency: "INR", purchase_date: new Date().toISOString().split('T')[0] });
       
       onOpenChange(false);
@@ -268,12 +278,19 @@ export const UnifiedAssetDialog = ({ open, onOpenChange, onSuccess }: UnifiedAss
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <Label htmlFor="crypto-platform">Platform</Label>
-                  <Input
-                    id="crypto-platform"
-                    value={cryptoForm.platform}
-                    onChange={(e) => setCryptoForm({ ...cryptoForm, platform: e.target.value })}
-                    placeholder="Binance, Coinbase"
-                  />
+                  <Select value={cryptoForm.platform} onValueChange={(value) => setCryptoForm({ ...cryptoForm, platform: value })}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select platform" />
+                    </SelectTrigger>
+                    <SelectContent className="bg-popover z-[100]">
+                      <SelectItem value="binance">🔶 Binance</SelectItem>
+                      <SelectItem value="paypal">💙 PayPal</SelectItem>
+                      <SelectItem value="coinbase">💎 Coinbase</SelectItem>
+                      <SelectItem value="kraken">🐙 Kraken</SelectItem>
+                      <SelectItem value="wazirx">🇮🇳 WazirX</SelectItem>
+                      <SelectItem value="other">📦 Other</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
                 <div>
                   <Label htmlFor="crypto-currency">Currency</Label>
@@ -281,13 +298,57 @@ export const UnifiedAssetDialog = ({ open, onOpenChange, onSuccess }: UnifiedAss
                     <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="bg-popover z-[100]">
                       <SelectItem value="USD">$ USD</SelectItem>
                       <SelectItem value="INR">₹ INR</SelectItem>
                       <SelectItem value="USDT">₮ USDT</SelectItem>
                       <SelectItem value="EUR">€ EUR</SelectItem>
                     </SelectContent>
                   </Select>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="crypto-network">Network (Optional)</Label>
+                  <Input
+                    id="crypto-network"
+                    value={cryptoForm.network}
+                    onChange={(e) => setCryptoForm({ ...cryptoForm, network: e.target.value })}
+                    placeholder="e.g., ERC20, TRC20"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="crypto-fee">Transaction Fee (Optional)</Label>
+                  <Input
+                    id="crypto-fee"
+                    type="number"
+                    step="0.00000001"
+                    value={cryptoForm.fee}
+                    onChange={(e) => setCryptoForm({ ...cryptoForm, fee: e.target.value })}
+                    placeholder="0.001"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="crypto-wallet">Wallet Address (Optional)</Label>
+                  <Input
+                    id="crypto-wallet"
+                    value={cryptoForm.wallet_address}
+                    onChange={(e) => setCryptoForm({ ...cryptoForm, wallet_address: e.target.value })}
+                    placeholder="0x..."
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="crypto-tx">TX Hash (Optional)</Label>
+                  <Input
+                    id="crypto-tx"
+                    value={cryptoForm.tx_hash}
+                    onChange={(e) => setCryptoForm({ ...cryptoForm, tx_hash: e.target.value })}
+                    placeholder="Transaction hash"
+                  />
                 </div>
               </div>
             </TabsContent>

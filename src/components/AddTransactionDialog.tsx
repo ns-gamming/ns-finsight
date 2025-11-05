@@ -32,6 +32,7 @@ export const AddTransactionDialog = ({ open, onOpenChange, onSuccess }: AddTrans
     date: new Date().toISOString().split("T")[0],
     category_id: "",
     family_member_id: "",
+    payment_source: "",
   });
 
   const getCurrencySymbol = (currency: string) => {
@@ -84,6 +85,7 @@ export const AddTransactionDialog = ({ open, onOpenChange, onSuccess }: AddTrans
           timestamp: new Date(formData.date).toISOString(),
           category_id: formData.category_id || undefined,
           family_member_id: formData.family_member_id || undefined,
+          payment_source: formData.payment_source || undefined,
         },
       });
 
@@ -100,6 +102,7 @@ export const AddTransactionDialog = ({ open, onOpenChange, onSuccess }: AddTrans
         date: new Date().toISOString().split("T")[0],
         category_id: "",
         family_member_id: "",
+        payment_source: "",
       });
       onOpenChange(false);
       onSuccess?.();
@@ -192,13 +195,13 @@ export const AddTransactionDialog = ({ open, onOpenChange, onSuccess }: AddTrans
                   <SelectValue placeholder={`Select ${formData.type} category`} />
                 </SelectTrigger>
                 <SelectContent 
-                  className="max-h-[60vh] overflow-y-auto bg-popover border-border"
+                  className="max-h-[60vh] overflow-y-auto bg-popover border-border z-[100]"
                   position="popper"
                   sideOffset={4}
                 >
                   {filteredCategories.length === 0 ? (
                     <div className="p-4 text-center text-sm text-muted-foreground">
-                      No {formData.type} categories available yet
+                      {categories.length === 0 ? "Loading categories..." : `No ${formData.type} categories available`}
                     </div>
                   ) : (
                     <div className="p-1">
@@ -261,15 +264,36 @@ export const AddTransactionDialog = ({ open, onOpenChange, onSuccess }: AddTrans
             </div>
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="merchant">Merchant/Source</Label>
-            <Input
-              id="merchant"
-              required
-              value={formData.merchant}
-              onChange={(e) => setFormData({ ...formData, merchant: e.target.value })}
-              placeholder="e.g., Salary, Grocery Store"
-            />
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="merchant">Merchant/Source</Label>
+              <Input
+                id="merchant"
+                required
+                value={formData.merchant}
+                onChange={(e) => setFormData({ ...formData, merchant: e.target.value })}
+                placeholder="e.g., Salary, Grocery Store"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="payment_source">Payment Source (Optional)</Label>
+              <Select value={formData.payment_source} onValueChange={(value) => setFormData({ ...formData, payment_source: value })}>
+                <SelectTrigger className="h-11 bg-background border-border">
+                  <SelectValue placeholder="Select payment source" />
+                </SelectTrigger>
+                <SelectContent className="bg-popover border-border z-[100]">
+                  <SelectItem value="">None</SelectItem>
+                  <SelectItem value="bank">🏦 Bank Account</SelectItem>
+                  <SelectItem value="wallet">💳 Wallet</SelectItem>
+                  <SelectItem value="binance">🔶 Binance</SelectItem>
+                  <SelectItem value="paypal">💙 PayPal</SelectItem>
+                  <SelectItem value="crypto_wallet">₿ Crypto Wallet</SelectItem>
+                  <SelectItem value="cash">💵 Cash</SelectItem>
+                  <SelectItem value="other">📦 Other</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
 
           <div className="space-y-2">
