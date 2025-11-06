@@ -1,5 +1,3 @@
-Nice — here’s a polished, advanced README.md you can drop straight into your repo. It’s feature-rich (badges, setup, env, CI, roadmap, contribution guide, credits) and written in a friendly, clear tone so anyone can get started fast. Paste this into your README.md and tweak any links/details you want.
-
 # 🌐 NS Tracker — Smart Personal Finance Dashboard
 
 [![Repo Size](https://img.shields.io/github/repo-size/ns-gamming/ns-tracker)](https://github.com/ns-gamming/ns-tracker)
