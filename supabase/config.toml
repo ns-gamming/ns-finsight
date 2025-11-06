@@ -20,3 +20,6 @@ verify_jwt = false
 
 [functions.currency-converter]
 verify_jwt = false
+
+[functions.ai-suggest-transaction]
+verify_jwt = true

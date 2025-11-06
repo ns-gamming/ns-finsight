@@ -21,6 +21,9 @@ import { useRealtimeUpdates } from "@/hooks/useRealtimeUpdates";
 import { QuickStats } from "@/components/QuickStats";
 import { RecentTransactions } from "@/components/RecentTransactions";
 import { FamilyOverview } from "@/components/FamilyOverview";
+import { BudgetAlerts } from "@/components/BudgetAlerts";
+import { SmartAlerts } from "@/components/SmartAlerts";
+import { AnalyticsDashboard } from "@/components/AnalyticsDashboard";
 import { MarketHoldings } from "@/components/MarketHoldings";
 import { UserProfile } from "@/components/UserProfile";
 import { OrderTracking } from "@/components/OrderTracking";
@@ -170,36 +173,46 @@ const Dashboard = () => {
           <DashboardSkeleton />
         ) : (
           <>
-            <QuickStats
-              netWorth={dashboardData?.netWorth || 0}
-              monthlyIncome={dashboardData?.monthlyIncome || 0}
-              monthlyExpenses={dashboardData?.monthlyExpenses || 0}
-              savingsRate={dashboardData?.savingsRate || 0}
-              totalIncome={dashboardData?.totalIncome || 0}
-              totalExpenses={dashboardData?.totalExpenses || 0}
-              averageSavingsRate={dashboardData?.averageSavingsRate || 0}
-              currency="INR"
-            />
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 animate-fade-in">
+              <QuickStats
+                netWorth={dashboardData?.netWorth || 0}
+                monthlyIncome={dashboardData?.monthlyIncome || 0}
+                monthlyExpenses={dashboardData?.monthlyExpenses || 0}
+                savingsRate={dashboardData?.savingsRate || 0}
+                totalIncome={dashboardData?.totalIncome || 0}
+                totalExpenses={dashboardData?.totalExpenses || 0}
+                averageSavingsRate={dashboardData?.averageSavingsRate || 0}
+                currency="INR"
+              />
+            </div>
+
+            <div className="grid gap-6 lg:grid-cols-3 mb-8 animate-fade-in" style={{ animationDelay: "100ms" }}>
+              <div className="lg:col-span-2 space-y-6">
+                <SmartAlerts />
+                <BudgetAlerts />
+              </div>
+              <div className="space-y-6">
+                <RecentTransactions transactions={dashboardData?.recentTransactions} />
+              </div>
+            </div>
+
+            <div className="mb-8 animate-fade-in" style={{ animationDelay: "200ms" }}>
+              <AnalyticsDashboard />
+            </div>
 
             <div className="mb-8">
               <WalletManagement />
             </div>
 
-            <div className="mb-8">
+            <div className="grid gap-6 lg:grid-cols-2 mb-8 animate-fade-in" style={{ animationDelay: "300ms" }}>
               <AdvancedCharts
                 monthlyTrend={dashboardData?.monthlyTrend}
                 categoryBreakdown={dashboardData?.categoryBreakdown}
               />
-            </div>
-
-            <div className="mb-8">
-              <RecentTransactions transactions={dashboardData?.recentTransactions} />
-            </div>
-
-            <div className="mb-8">
-              {/* Family overview by member */}
-              {/* @ts-ignore - runtime data shape enforced */}
-              <FamilyOverview items={dashboardData?.familySummary || []} />
+              <div>
+                {/* @ts-ignore - runtime data shape enforced */}
+                <FamilyOverview items={dashboardData?.familySummary || []} />
+              </div>
             </div>
 
             <div className="grid gap-6 md:grid-cols-2 mb-8">

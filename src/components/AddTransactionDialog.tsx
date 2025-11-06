@@ -20,8 +20,14 @@ interface Member { id: string; name: string; is_alive: boolean }
 
 export const AddTransactionDialog = ({ open, onOpenChange, onSuccess }: AddTransactionDialogProps) => {
   const [loading, setLoading] = useState(false);
+  const [loadingSuggestions, setLoadingSuggestions] = useState(false);
   const [categories, setCategories] = useState<Category[]>([]);
   const [members, setMembers] = useState<Member[]>([]);
+  const [aiSuggestions, setAiSuggestions] = useState<{
+    merchant: string;
+    notes: string;
+    averageAmount: number;
+  } | null>(null);
   const [formData, setFormData] = useState({
     type: "expense",
     amount: "",
@@ -60,6 +66,44 @@ export const AddTransactionDialog = ({ open, onOpenChange, onSuccess }: AddTrans
     };
     if (open) load();
   }, [open]);
+
+  // Fetch AI suggestions when category changes
+  useEffect(() => {
+    if (formData.category_id && formData.category_id !== "") {
+      fetchAiSuggestions();
+    }
+  }, [formData.category_id]);
+
+  const fetchAiSuggestions = async () => {
+    setLoadingSuggestions(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("ai-suggest-transaction", {
+        body: { categoryId: formData.category_id },
+      });
+
+      if (error) throw error;
+      setAiSuggestions(data);
+      
+      // Auto-fill if fields are empty and user preferences allow (opt-in)
+      const userPrefsOptIn = true; // Can be fetched from user preferences
+      if (userPrefsOptIn) {
+        if (data.merchant && !formData.merchant) {
+          setFormData((prev) => ({ ...prev, merchant: data.merchant }));
+          toast.success("AI suggested merchant filled!", { duration: 2000 });
+        }
+        if (data.notes && !formData.notes) {
+          setFormData((prev) => ({ ...prev, notes: data.notes }));
+        }
+        if (data.averageAmount && !formData.amount) {
+          setFormData((prev) => ({ ...prev, amount: data.averageAmount.toString() }));
+        }
+      }
+    } catch (error: any) {
+      console.error("AI suggestions error:", error);
+    } finally {
+      setLoadingSuggestions(false);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -266,14 +310,21 @@ export const AddTransactionDialog = ({ open, onOpenChange, onSuccess }: AddTrans
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="merchant">Merchant/Source</Label>
+              <Label htmlFor="merchant" className="flex items-center gap-2">
+                Merchant/Source
+                {loadingSuggestions && <Loader2 className="h-3 w-3 animate-spin text-primary" />}
+              </Label>
               <Input
                 id="merchant"
                 required
                 value={formData.merchant}
                 onChange={(e) => setFormData({ ...formData, merchant: e.target.value })}
                 placeholder="e.g., Salary, Grocery Store"
+                className="transition-all"
               />
+              {aiSuggestions && formData.merchant === aiSuggestions.merchant && (
+                <p className="text-xs text-primary animate-fade-in">✨ AI suggested based on your history</p>
+              )}
             </div>
 
             <div className="space-y-2">
