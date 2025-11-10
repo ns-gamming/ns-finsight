@@ -50,8 +50,14 @@ export const AddTransactionDialog = ({ open, onOpenChange, onSuccess }: AddTrans
     }
   };
 
-  // Filter categories based on explicit category_type
-  const filteredCategories = categories.filter(cat => cat.category_type === formData.type);
+  // Filter categories based on category_type, fallback to showing all if none match
+  const filteredCategories = categories.filter(cat => {
+    if (!cat.category_type) return false;
+    return cat.category_type === formData.type;
+  });
+  
+  // If no categories match the type, show all categories as fallback
+  const displayCategories = filteredCategories.length > 0 ? filteredCategories : categories;
 
   useEffect(() => {
     const load = async () => {
@@ -110,30 +116,38 @@ export const AddTransactionDialog = ({ open, onOpenChange, onSuccess }: AddTrans
     if (loading) return;
 
     const amountNum = parseFloat(formData.amount);
-    if (!amountNum || amountNum <= 0) {
+    if (!amountNum || amountNum <= 0 || isNaN(amountNum)) {
       toast.error("Please enter a valid amount greater than zero");
+      return;
+    }
+
+    if (!formData.date) {
+      toast.error("Please select a date");
       return;
     }
 
     setLoading(true);
 
     try {
-      const { error } = await supabase.functions.invoke("transactions", {
+      const { data, error } = await supabase.functions.invoke("transactions", {
         body: {
           type: formData.type,
           amount: amountNum,
-          merchant: formData.merchant || undefined,
-          notes: formData.notes || undefined,
-          description: formData.description || undefined,
+          merchant: formData.merchant || "Unknown",
+          notes: formData.notes || null,
+          description: formData.description || null,
           currency: formData.currency,
           timestamp: new Date(formData.date).toISOString(),
-          category_id: formData.category_id || undefined,
-          family_member_id: formData.family_member_id || undefined,
-          payment_source: formData.payment_source || undefined,
+          category_id: formData.category_id || null,
+          family_member_id: formData.family_member_id || null,
+          payment_source: formData.payment_source || null,
         },
       });
 
-      if (error) throw error;
+      if (error) {
+        console.error("Transaction error:", error);
+        throw error;
+      }
 
       toast.success("Transaction added successfully");
       setFormData({
@@ -243,13 +257,13 @@ export const AddTransactionDialog = ({ open, onOpenChange, onSuccess }: AddTrans
                   position="popper"
                   sideOffset={4}
                 >
-                  {filteredCategories.length === 0 ? (
+                  {displayCategories.length === 0 ? (
                     <div className="p-4 text-center text-sm text-muted-foreground">
-                      {categories.length === 0 ? "Loading categories..." : `No ${formData.type} categories available`}
+                      Loading categories...
                     </div>
                   ) : (
                     <div className="p-1">
-                      {filteredCategories.map((c) => (
+                      {displayCategories.map((c) => (
                         <SelectItem 
                           key={c.id} 
                           value={c.id} 
@@ -311,12 +325,11 @@ export const AddTransactionDialog = ({ open, onOpenChange, onSuccess }: AddTrans
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="merchant" className="flex items-center gap-2">
-                Merchant/Source
+                Merchant/Source (Optional)
                 {loadingSuggestions && <Loader2 className="h-3 w-3 animate-spin text-primary" />}
               </Label>
               <Input
                 id="merchant"
-                required
                 value={formData.merchant}
                 onChange={(e) => setFormData({ ...formData, merchant: e.target.value })}
                 placeholder="e.g., Salary, Grocery Store"
