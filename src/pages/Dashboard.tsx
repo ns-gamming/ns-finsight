@@ -130,7 +130,7 @@ const Dashboard = () => {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="relative">
-                <img src={logoImage} alt="NS FinSight Logo" className="h-12 w-12 rounded-full object-cover ring-2 ring-primary shadow-lg" />
+                <img src={logoImage} alt="NS FinSight Logo" className="h-12 w-auto shadow-lg" />
               </div>
               <div>
                 <h1 className="text-xl font-bold">NS FinSight</h1>

@@ -15,7 +15,7 @@ const NotFound = () => {
 
       <div className="text-center space-y-8 max-w-2xl relative z-10 animate-fade-in">
         <div className="flex justify-center mb-8">
-          <img src={logoImage} alt="NS FINSIGHT" className="h-24 w-24 rounded-full ring-4 ring-primary shadow-2xl animate-scale-in" />
+          <img src={logoImage} alt="NS FinSight" className="h-24 w-auto shadow-2xl animate-scale-in" />
         </div>
 
         <div className="relative">

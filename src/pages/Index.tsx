@@ -109,8 +109,8 @@ const Index = () => {
           >
             <img 
               src={logo} 
-              alt="NS Tracker Logo" 
-              className="w-14 h-14 rounded-full shadow-lg border-2 border-primary/20 group-hover:border-primary/50 transition-all group-hover:rotate-12 group-hover:scale-110 object-cover"
+              alt="NS FinSight Logo" 
+              className="h-14 w-auto shadow-lg transition-all group-hover:scale-110"
             />
             <span className="text-2xl font-bold bg-gradient-to-r from-primary via-primary/80 to-primary bg-clip-text text-transparent">
               NS FinSight
@@ -471,7 +471,7 @@ const Index = () => {
           <div className="grid md:grid-cols-4 gap-8 mb-8">
             <div>
               <div className="flex items-center gap-3 mb-4">
-                <img src={logo} alt="NS FinSight" className="w-10 h-10 rounded-full" />
+                <img src={logo} alt="NS FinSight" className="h-10 w-auto" />
                 <span className="font-bold text-lg">NS FinSight</span>
               </div>
               <p className="text-sm text-muted-foreground">

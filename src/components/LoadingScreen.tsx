@@ -8,7 +8,7 @@ export const LoadingScreen = () => {
         <img 
           src={logoImage} 
           alt="NS FinSight" 
-          className="w-20 h-20 rounded-full shadow-glow animate-pulse-slow object-cover"
+          className="h-20 w-auto shadow-glow animate-pulse-slow"
         />
         <div className="flex flex-col items-center gap-2">
           <Loader2 className="w-8 h-8 animate-spin text-primary" />

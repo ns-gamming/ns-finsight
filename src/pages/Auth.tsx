@@ -129,8 +129,8 @@ const Auth = () => {
               <div className="absolute inset-0 bg-primary/20 rounded-full blur-xl animate-pulse"></div>
               <img 
                 src={logoImage} 
-                alt="NS TRACKER" 
-                className="h-20 w-20 rounded-full ring-4 ring-primary/50 shadow-2xl relative z-10 hover-scale" 
+                alt="NS FinSight" 
+                className="h-20 w-auto shadow-2xl relative z-10 hover-scale" 
               />
             </div>
             <div>
@@ -187,7 +187,7 @@ const Auth = () => {
             <CardHeader className="text-center space-y-2 pb-6">
               {/* Mobile Logo */}
               <div className="lg:hidden flex items-center justify-center gap-3 mb-4">
-                <img src={logoImage} alt="NS FINSIGHT" className="h-14 w-14 rounded-full ring-2 ring-primary shadow-lg" />
+                <img src={logoImage} alt="NS FinSight" className="h-14 w-auto shadow-lg" />
                 <div>
                   <h1 className="text-2xl font-bold gradient-text">NS FinSight</h1>
                   <p className="text-xs text-muted-foreground">Financial Intelligence Platform</p>
