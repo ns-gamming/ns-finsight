@@ -127,11 +127,13 @@ const Auth = () => {
           <div className="flex items-center gap-4 mb-12">
             <div className="relative">
               <div className="absolute inset-0 bg-primary/20 rounded-full blur-xl animate-pulse"></div>
-              <img 
-                src={logoImage} 
-                alt="NS FinSight" 
-                className="h-20 w-auto shadow-2xl relative z-10 hover-scale" 
-              />
+              <div className="h-20 w-20 rounded-full overflow-hidden bg-white shadow-2xl relative z-10 hover-scale ring-4 ring-primary/30">
+                <img 
+                  src={logoImage} 
+                  alt="NS FinSight" 
+                  className="h-full w-full object-contain p-2" 
+                />
+              </div>
             </div>
             <div>
               <h1 className="text-5xl font-bold bg-gradient-to-r from-primary via-primary/80 to-success bg-clip-text text-transparent">
@@ -187,7 +189,9 @@ const Auth = () => {
             <CardHeader className="text-center space-y-2 pb-6">
               {/* Mobile Logo */}
               <div className="lg:hidden flex items-center justify-center gap-3 mb-4">
-                <img src={logoImage} alt="NS FinSight" className="h-14 w-auto shadow-lg" />
+                <div className="h-14 w-14 rounded-full overflow-hidden bg-white shadow-lg ring-2 ring-primary/30">
+                  <img src={logoImage} alt="NS FinSight" className="h-full w-full object-contain p-1" />
+                </div>
                 <div>
                   <h1 className="text-2xl font-bold gradient-text">NS FinSight</h1>
                   <p className="text-xs text-muted-foreground">Financial Intelligence Platform</p>

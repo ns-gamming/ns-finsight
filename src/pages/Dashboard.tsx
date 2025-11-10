@@ -129,8 +129,8 @@ const Dashboard = () => {
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="relative">
-                <img src={logoImage} alt="NS FinSight Logo" className="h-12 w-auto shadow-lg" />
+              <div className="h-12 w-12 rounded-full overflow-hidden bg-white shadow-lg ring-2 ring-primary/20">
+                <img src={logoImage} alt="NS FinSight Logo" className="h-full w-full object-contain p-1" />
               </div>
               <div>
                 <h1 className="text-xl font-bold">NS FinSight</h1>

@@ -13,7 +13,9 @@ const Privacy = () => {
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <img src={logoImage} alt="NS FinSight" className="h-10 w-auto" />
+              <div className="h-10 w-10 rounded-full overflow-hidden bg-white shadow-md ring-2 ring-primary/20">
+                <img src={logoImage} alt="NS FinSight" className="h-full w-full object-contain p-1" />
+              </div>
               <h1 className="text-xl font-bold">NS FinSight Privacy</h1>
             </div>
             <Button variant="outline" onClick={() => navigate("/dashboard")} className="gap-2">

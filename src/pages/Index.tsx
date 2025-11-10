@@ -107,11 +107,13 @@ const Index = () => {
             onClick={() => navigate("/")}
             data-testid="logo-header"
           >
-            <img 
-              src={logo} 
-              alt="NS FinSight Logo" 
-              className="h-14 w-auto shadow-lg transition-all group-hover:scale-110"
-            />
+            <div className="relative h-14 w-14 rounded-full overflow-hidden bg-white shadow-lg ring-2 ring-primary/20 transition-all group-hover:scale-110 group-hover:ring-primary/40">
+              <img 
+                src={logo} 
+                alt="NS FinSight Logo" 
+                className="h-full w-full object-contain p-1"
+              />
+            </div>
             <span className="text-2xl font-bold bg-gradient-to-r from-primary via-primary/80 to-primary bg-clip-text text-transparent">
               NS FinSight
             </span>
@@ -471,7 +473,9 @@ const Index = () => {
           <div className="grid md:grid-cols-4 gap-8 mb-8">
             <div>
               <div className="flex items-center gap-3 mb-4">
-                <img src={logo} alt="NS FinSight" className="h-10 w-auto" />
+                <div className="h-10 w-10 rounded-full overflow-hidden bg-white shadow-md ring-2 ring-primary/20">
+                  <img src={logo} alt="NS FinSight" className="h-full w-full object-contain p-1" />
+                </div>
                 <span className="font-bold text-lg">NS FinSight</span>
               </div>
               <p className="text-sm text-muted-foreground">
