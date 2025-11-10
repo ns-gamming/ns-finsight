@@ -39,6 +39,9 @@ export const AddTransactionDialog = ({ open, onOpenChange, onSuccess }: AddTrans
     category_id: "",
     family_member_id: "",
     payment_source: "",
+    is_flagged: false,
+    flag_reason: "",
+    tags: "",
   });
 
   const getCurrencySymbol = (currency: string) => {
@@ -141,6 +144,9 @@ export const AddTransactionDialog = ({ open, onOpenChange, onSuccess }: AddTrans
           category_id: formData.category_id || null,
           family_member_id: formData.family_member_id && formData.family_member_id !== "none" ? formData.family_member_id : null,
           payment_source: formData.payment_source && formData.payment_source !== "none" ? formData.payment_source : null,
+          is_flagged: formData.is_flagged,
+          flag_reason: formData.is_flagged ? formData.flag_reason : null,
+          tags: formData.tags ? formData.tags.split(',').map(t => t.trim()).filter(Boolean) : [],
         },
       });
 
@@ -380,6 +386,41 @@ export const AddTransactionDialog = ({ open, onOpenChange, onSuccess }: AddTrans
               placeholder="Any other details..."
               className="min-h-[60px]"
             />
+          </div>
+
+          <div className="space-y-3 p-4 rounded-lg border border-border">
+            <div className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                id="is_flagged"
+                checked={formData.is_flagged}
+                onChange={(e) => setFormData({ ...formData, is_flagged: e.target.checked })}
+                className="w-4 h-4"
+              />
+              <Label htmlFor="is_flagged" className="cursor-pointer">🚩 Flag this transaction for review</Label>
+            </div>
+            
+            {formData.is_flagged && (
+              <div className="space-y-2 animate-fade-in">
+                <Label htmlFor="flag_reason">Flag Reason</Label>
+                <Input
+                  id="flag_reason"
+                  value={formData.flag_reason}
+                  onChange={(e) => setFormData({ ...formData, flag_reason: e.target.value })}
+                  placeholder="e.g., Needs receipt, Verify amount, Tax deductible"
+                />
+              </div>
+            )}
+
+            <div className="space-y-2">
+              <Label htmlFor="tags">Tags (comma-separated, optional)</Label>
+              <Input
+                id="tags"
+                value={formData.tags}
+                onChange={(e) => setFormData({ ...formData, tags: e.target.value })}
+                placeholder="e.g., urgent, recurring, business"
+              />
+            </div>
           </div>
 
           <div className="flex gap-3 pt-4">

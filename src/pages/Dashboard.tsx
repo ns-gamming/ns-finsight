@@ -40,6 +40,8 @@ import { LoadingScreen } from "@/components/LoadingScreen";
 import { DashboardSkeleton } from "@/components/DashboardSkeleton";
 import { WalletManagement } from "@/components/WalletManagement";
 import { UnifiedAssetDialog } from "@/components/UnifiedAssetDialog";
+import { RealTimeAlerts } from "@/components/RealTimeAlerts";
+import { CategoryManager } from "@/components/CategoryManager";
 
 const Dashboard = () => {
   const [user, setUser] = useState<User | null>(null);
@@ -189,6 +191,7 @@ const Dashboard = () => {
 
             <div className="grid gap-6 lg:grid-cols-3 mb-8 animate-fade-in" style={{ animationDelay: "100ms" }}>
               <div className="lg:col-span-2 space-y-6">
+                <RealTimeAlerts />
                 <SmartAlerts />
                 <BudgetAlerts />
                 <BillReminders />
@@ -220,6 +223,10 @@ const Dashboard = () => {
             <div className="grid gap-6 md:grid-cols-2 mb-8">
               <UserProfile />
               <SecurityMonitor />
+            </div>
+
+            <div className="mb-8">
+              <CategoryManager />
             </div>
 
             <div className="mb-8">

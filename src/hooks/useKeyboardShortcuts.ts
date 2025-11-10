@@ -11,19 +11,27 @@ interface ShortcutConfig {
 
 export const useKeyboardShortcuts = (shortcuts: ShortcutConfig[]) => {
   useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const activeElement = document.activeElement;
+      const isInputField = activeElement?.tagName === 'INPUT' || activeElement?.tagName === 'TEXTAREA';
       shortcuts.forEach((shortcut) => {
-        const ctrlMatch = shortcut.ctrlKey ? event.ctrlKey || event.metaKey : !event.ctrlKey && !event.metaKey;
-        const shiftMatch = shortcut.shiftKey ? event.shiftKey : !event.shiftKey;
-        const altMatch = shortcut.altKey ? event.altKey : !event.altKey;
-        
+        if (!e.key || !shortcut.key) return;
+        const keyMatch = e.key.toLowerCase() === shortcut.key.toLowerCase();
+
+        const ctrlMatch = shortcut.ctrlKey ? e.ctrlKey || e.metaKey : !e.ctrlKey && !e.metaKey;
+        const shiftMatch = shortcut.shiftKey ? e.shiftKey : !e.shiftKey;
+        const altMatch = shortcut.altKey ? e.altKey : !e.altKey;
+
         if (
-          event.key.toLowerCase() === shortcut.key.toLowerCase() &&
+          keyMatch &&
           ctrlMatch &&
           shiftMatch &&
           altMatch
         ) {
-          event.preventDefault();
+          if (isInputField && shortcut.key !== '/') { // Prevent shortcuts on input fields unless it's the shortcut help
+            return;
+          }
+          e.preventDefault();
           shortcut.action();
         }
       });
