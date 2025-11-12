@@ -129,22 +129,23 @@ const Dashboard = () => {
     <div className="min-h-screen bg-background relative overflow-hidden">
       {/* Animated Background */}
       <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-0 -left-20 w-96 h-96 bg-primary/5 rounded-full blur-3xl animate-float"></div>
-        <div className="absolute bottom-0 -right-20 w-96 h-96 bg-success/5 rounded-full blur-3xl animate-float" style={{ animationDelay: "2s" }}></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-primary/3 rounded-full blur-3xl animate-pulse" style={{ animationDelay: "4s" }}></div>
+        <div className="absolute top-0 -left-20 w-96 h-96 bg-primary/8 rounded-full blur-3xl animate-floating-smooth"></div>
+        <div className="absolute bottom-0 -right-20 w-96 h-96 bg-success/8 rounded-full blur-3xl animate-floating-smooth animate-morph" style={{ animationDelay: "2s" }}></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-chart-4/5 rounded-full blur-3xl animate-pulse-slow animate-morph" style={{ animationDelay: "4s" }}></div>
+        <div className="absolute top-1/4 right-1/4 w-64 h-64 bg-warning/5 rounded-full blur-2xl animate-floating-smooth" style={{ animationDelay: "3s" }}></div>
       </div>
 
-      <header className="border-b border-border glass-effect sticky top-0 z-50 animate-slide-in-up">
+      <header className="border-b border-border/50 glass-morphism sticky top-0 z-50 animate-slide-in-up backdrop-blur-xl">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="relative h-12 w-12 flex-shrink-0">
-                <div className="absolute inset-0 bg-primary/20 rounded-full blur-md animate-pulse"></div>
-                <div className="h-full w-full rounded-full overflow-hidden bg-white shadow-lg ring-2 ring-primary/30 relative z-10">
+                <div className="absolute inset-0 bg-primary/30 rounded-full blur-md animate-ripple"></div>
+                <div className="h-full w-full rounded-full overflow-hidden bg-white shadow-lg ring-2 ring-primary/40 relative z-10 hover-glow">
                   <img 
                     src={logoImage} 
                     alt="NS FinSight Logo" 
-                    className="h-full w-full object-contain p-1"
+                    className="h-full w-full object-contain p-1 transition-transform duration-300 hover:scale-110"
                     loading="eager"
                     onError={(e) => {
                       console.error('Logo failed to load');
@@ -153,24 +154,24 @@ const Dashboard = () => {
                   />
                 </div>
               </div>
-              <span className="text-xl font-bold bg-gradient-to-r from-primary via-primary/90 to-success bg-clip-text text-transparent animate-gradient-shift bg-[length:200%_auto]">
+              <span className="text-xl font-bold bg-gradient-to-r from-primary via-primary/90 to-success bg-clip-text text-transparent animate-gradient-shift bg-[length:200%_auto] hover:scale-105 transition-transform">
                 NS FinSight
               </span>
             </div>
             <div className="flex items-center gap-2">
-              <Button variant="ghost" size="icon" onClick={() => setShowChatbot(true)} title="AI Financial Advisor" className="hover-scale">
+              <Button variant="ghost" size="icon" onClick={() => setShowChatbot(true)} title="AI Financial Advisor" className="hover-glow hover:scale-110 transition-all duration-300">
                 <MessageSquare className="h-5 w-5" />
               </Button>
-              <Button variant="ghost" size="icon" onClick={() => navigate("/family")} title="Family Members" className="hover-scale">
+              <Button variant="ghost" size="icon" onClick={() => navigate("/family")} title="Family Members" className="hover-glow hover:scale-110 transition-all duration-300">
                 <Users className="h-5 w-5" />
               </Button>
-              <Button variant="ghost" size="icon" onClick={() => navigate("/privacy")} title="Privacy & Security" className="hover-scale">
+              <Button variant="ghost" size="icon" onClick={() => navigate("/privacy")} title="Privacy & Security" className="hover-glow hover:scale-110 transition-all duration-300">
                 <Shield className="h-5 w-5" />
               </Button>
-              <Button variant="ghost" size="icon" onClick={toggleTheme} className="hover-scale">
+              <Button variant="ghost" size="icon" onClick={toggleTheme} className="hover-glow hover:scale-110 transition-all duration-300 hover:rotate-180">
                 {theme === "light" ? <Moon className="h-5 w-5" /> : <Sun className="h-5 w-5" />}
               </Button>
-              <Button variant="ghost" onClick={handleSignOut} className="hover-scale">
+              <Button variant="ghost" onClick={handleSignOut} className="hover-glow hover:scale-105 transition-all duration-300">
                 <LogOut className="mr-2 h-4 w-4" />
                 Sign Out
               </Button>
@@ -180,12 +181,12 @@ const Dashboard = () => {
       </header>
 
       <main className="container mx-auto px-3 sm:px-4 py-4 sm:py-8 relative z-10">
-        <div className="mb-6 sm:mb-8 flex items-center justify-between animate-slide-in-left">
+        <div className="mb-6 sm:mb-8 flex items-center justify-between animate-card-entrance">
           <div>
-            <h2 className="text-2xl sm:text-3xl font-bold mb-1 sm:mb-2 bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">Welcome back!</h2>
-            <p className="text-muted-foreground text-sm sm:text-lg">Here's your financial overview</p>
+            <h2 className="text-2xl sm:text-3xl font-bold mb-1 sm:mb-2 bg-gradient-to-r from-foreground via-primary to-foreground/70 bg-clip-text text-transparent bg-[length:200%_auto] animate-gradient-shift">Welcome back!</h2>
+            <p className="text-muted-foreground text-sm sm:text-lg opacity-0 animate-fade-in-up" style={{ animationDelay: "0.2s", animationFillMode: "forwards" }}>Here's your financial overview</p>
           </div>
-          <Button variant="outline" size="icon" onClick={() => refetch()} disabled={isLoading} className="shrink-0">
+          <Button variant="outline" size="icon" onClick={() => refetch()} disabled={isLoading} className="shrink-0 hover-glow hover:scale-110 transition-all duration-300">
             <RefreshCw className={`h-4 w-4 ${isLoading ? "animate-spin" : ""}`} />
           </Button>
         </div>
@@ -194,8 +195,8 @@ const Dashboard = () => {
           <DashboardSkeleton />
         ) : (
           <>
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              <div className="animate-slide-in-up" style={{ animationDelay: "0.1s" }}>
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 mb-8">
+              <div className="opacity-0 animate-card-entrance" style={{ animationDelay: "0.1s", animationFillMode: "forwards" }}>
                 <QuickStats
                   netWorth={dashboardData?.netWorth || 0}
                   monthlyIncome={dashboardData?.monthlyIncome || 0}
@@ -211,40 +212,42 @@ const Dashboard = () => {
 
             <div className="grid gap-6 lg:grid-cols-3 mb-8">
               <div className="lg:col-span-2 space-y-6">
-                <div className="animate-slide-in-left" style={{ animationDelay: "0.2s" }}>
+                <div className="opacity-0 animate-card-entrance card-shine" style={{ animationDelay: "0.2s", animationFillMode: "forwards" }}>
                   <RealTimeAlerts />
                 </div>
-                <div className="animate-slide-in-left" style={{ animationDelay: "0.3s" }}>
+                <div className="opacity-0 animate-card-entrance card-shine" style={{ animationDelay: "0.3s", animationFillMode: "forwards" }}>
                   <SmartAlerts />
                 </div>
-                <div className="animate-slide-in-left" style={{ animationDelay: "0.4s" }}>
+                <div className="opacity-0 animate-card-entrance card-shine" style={{ animationDelay: "0.4s", animationFillMode: "forwards" }}>
                   <BudgetAlerts />
                 </div>
-                <div className="animate-slide-in-left" style={{ animationDelay: "0.5s" }}>
+                <div className="opacity-0 animate-card-entrance card-shine" style={{ animationDelay: "0.5s", animationFillMode: "forwards" }}>
                   <BillReminders />
                 </div>
               </div>
               <div className="space-y-6">
-                <div className="animate-slide-in-right" style={{ animationDelay: "0.2s" }}>
+                <div className="opacity-0 animate-card-entrance card-shine" style={{ animationDelay: "0.3s", animationFillMode: "forwards" }}>
                   <RecentTransactions transactions={dashboardData?.recentTransactions} />
                 </div>
               </div>
             </div>
 
-            <div className="mb-8 animate-fade-in" style={{ animationDelay: "200ms" }}>
+            <div className="mb-8 opacity-0 animate-card-entrance card-shine perspective-card" style={{ animationDelay: "0.6s", animationFillMode: "forwards" }}>
               <AnalyticsDashboard />
             </div>
 
-            <div className="mb-8">
+            <div className="mb-8 opacity-0 animate-card-entrance card-shine" style={{ animationDelay: "0.7s", animationFillMode: "forwards" }}>
               <WalletManagement />
             </div>
 
-            <div className="grid gap-6 lg:grid-cols-2 mb-8 animate-fade-in" style={{ animationDelay: "300ms" }}>
-              <AdvancedCharts
-                monthlyTrend={dashboardData?.monthlyTrend}
-                categoryBreakdown={dashboardData?.categoryBreakdown}
-              />
-              <div>
+            <div className="grid gap-6 lg:grid-cols-2 mb-8">
+              <div className="opacity-0 animate-card-entrance card-shine perspective-card" style={{ animationDelay: "0.8s", animationFillMode: "forwards" }}>
+                <AdvancedCharts
+                  monthlyTrend={dashboardData?.monthlyTrend}
+                  categoryBreakdown={dashboardData?.categoryBreakdown}
+                />
+              </div>
+              <div className="opacity-0 animate-card-entrance card-shine" style={{ animationDelay: "0.9s", animationFillMode: "forwards" }}>
                 {/* @ts-ignore - runtime data shape enforced */}
                 <FamilyOverview items={dashboardData?.familySummary || []} />
               </div>
@@ -294,32 +297,34 @@ const Dashboard = () => {
               <OrderTracking />
             </div>
 
-            <Card className="shadow-card animate-fade-in">
+            <Card className="shadow-card opacity-0 animate-card-entrance glass-morphism border-border/50" style={{ animationDelay: "1.2s", animationFillMode: "forwards" }}>
               <CardHeader>
-                <CardTitle>Quick Actions</CardTitle>
+                <CardTitle className="flex items-center gap-2">
+                  <span className="animate-gradient-shift bg-gradient-to-r from-primary to-success bg-clip-text text-transparent bg-[length:200%_auto]">Quick Actions</span>
+                </CardTitle>
                 <CardDescription>Manage your finances efficiently</CardDescription>
               </CardHeader>
               <CardContent className="flex flex-wrap gap-4">
-                <Button className="gap-2 hover:scale-105 transition-transform" onClick={() => setShowAddTransaction(true)}>
+                <Button className="gap-2 hover-glow hover:scale-110 transition-all duration-300" onClick={() => setShowAddTransaction(true)}>
                   <Plus className="h-4 w-4" />
                   Add Transaction
                 </Button>
-                <Button className="gap-2 hover:scale-105 transition-transform" onClick={() => setShowAssetDialog(true)}>
+                <Button className="gap-2 hover-glow hover:scale-110 transition-all duration-300" onClick={() => setShowAssetDialog(true)}>
                   <TrendingUp className="h-4 w-4" />
                   Add Asset
                 </Button>
-                <Button variant="outline" className="gap-2 hover:scale-105 transition-transform" onClick={() => toast.info("Bank connection coming soon!")}>
+                <Button variant="outline" className="gap-2 hover-glow hover:scale-110 transition-all duration-300" onClick={() => toast.info("Bank connection coming soon!")}>
                   <LinkIcon className="h-4 w-4" />
                   Connect Bank Account
                 </Button>
-                <Button variant="outline" className="gap-2 hover:scale-105 transition-transform" onClick={() => setShowBudgetDialog(true)}>
+                <Button variant="outline" className="gap-2 hover-glow hover:scale-110 transition-all duration-300" onClick={() => setShowBudgetDialog(true)}>
                   Set Budget
                 </Button>
-                <Button variant="outline" className="gap-2 hover:scale-105 transition-transform" onClick={() => navigate("/family")}>
+                <Button variant="outline" className="gap-2 hover-glow hover:scale-110 transition-all duration-300" onClick={() => navigate("/family")}>
                   <Users className="h-4 w-4" />
                   Manage Family
                 </Button>
-                  <Button variant="outline" className="gap-2 hover:scale-105 transition-transform" onClick={() => setShowShortcuts(true)}>
+                  <Button variant="outline" className="gap-2 hover-glow hover:scale-110 transition-all duration-300" onClick={() => setShowShortcuts(true)}>
                     <Keyboard className="h-4 w-4" />
                     Keyboard Shortcuts
                   </Button>

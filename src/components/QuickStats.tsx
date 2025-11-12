@@ -141,7 +141,7 @@ export const QuickStats = ({
       bgColor: "bg-success/10",
       textColor: "text-success",
       badge: { icon: Calendar, text: "All time", variant: "outline" as const },
-      description: "Cumulative income across all time"
+      description: "Cumulative income across all all time"
     },
     {
       id: "total-expenses",
@@ -321,7 +321,7 @@ export const QuickStats = ({
                     {stat.title === "Savings Rate" && `Current month savings: ${formatCurrency(savings)}`}
                     {stat.title === "Total Income" && "All-time cumulative income"}
                     {stat.title === "Total Expenses" && "All-time cumulative expenses"}
-                    {stat.title === "Average Savings Rate" && "Historical average across all months"}
+                    {stat.title === "Average Savings Rate" && "Your average savings rate over all months"}
                   </p>
                 </div>
               );
