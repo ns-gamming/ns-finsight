@@ -1,4 +1,4 @@
-# NS TRACKER - Security Documentation
+# NS FINSIGHT - Security Documentation
 
 ## 🔒 Security Features Implemented
 

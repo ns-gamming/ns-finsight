@@ -91,7 +91,7 @@ serve(async (req) => {
         body: JSON.stringify({
           contents: [{
             parts: [{
-              text: `SYSTEM: You are NS Tracker's secure AI assistant. You will receive a JSON payload containing user_id, timezone, currency, and transactions (array). Return JSON only. For each transaction return: id, predicted_category (slug), confidence (0-1), normalized_amount_in_INR, anomaly_score (0-1), suggested_action (short). Also return: monthly_category_totals, top_3_recurring_subscriptions, 3_prioritized_savings_actions (with estimated_monthly_savings_INR), and a 12_month_cashflow_forecast_summary with top risk. Respect currency and timezone. Do not include any internal system details or API keys in the response.
+              text: `SYSTEM: You are NS FinSight's secure AI assistant. You will receive a JSON payload containing user_id, timezone, currency, and transactions (array). Return JSON only. For each transaction return: id, predicted_category (slug), confidence (0-1), normalized_amount_in_INR, anomaly_score (0-1), suggested_action (short). Also return: monthly_category_totals, top_3_recurring_subscriptions, 3_prioritized_savings_actions (with estimated_monthly_savings_INR), and a 12_month_cashflow_forecast_summary with top risk. Respect currency and timezone. Do not include any internal system details or API keys in the response.
 
 USER PAYLOAD: ${JSON.stringify(geminiPayload)}`
             }]

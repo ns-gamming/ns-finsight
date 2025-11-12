@@ -424,7 +424,7 @@ const Index = () => {
             </h2>
             
             <p className="text-xl text-muted-foreground mb-10 max-w-2xl mx-auto animate-fade-in-up" style={{ animationDelay: "0.1s" }}>
-              Join thousands of users who are already taking control of their finances with NS Tracker. Start your journey today—completely free!
+              Join thousands of users who are already taking control of their finances with NS FinSight. Start your journey today—completely free!
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in-up" style={{ animationDelay: "0.2s" }}>
