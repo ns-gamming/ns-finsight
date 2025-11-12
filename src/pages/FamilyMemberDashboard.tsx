@@ -5,10 +5,14 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, TrendingUp, TrendingDown, Calendar, DollarSign } from "lucide-react";
+import { ArrowLeft, TrendingUp, TrendingDown, Calendar, DollarSign, Phone, Mail, Briefcase, Target, User, MapPin, Droplet, AlertCircle } from "lucide-react";
 import { toast } from "sonner";
 import { RecentTransactions } from "@/components/RecentTransactions";
 import { useAnalytics } from "@/hooks/useAnalytics";
+import { EnhancedFinancialCharts } from "@/components/EnhancedFinancialCharts";
+import { BudgetAlerts } from "@/components/BudgetAlerts";
+import { FinancialTips } from "@/components/FinancialTips";
+import { AdSense } from "@/components/AdSense";
 
 interface FamilyMember {
   id: string;
@@ -18,6 +22,17 @@ interface FamilyMember {
   date_of_birth: string | null;
   is_alive: boolean;
   avatar_url: string | null;
+  metadata?: {
+    phone?: string;
+    occupation?: string;
+    income?: number;
+    expenses?: number;
+    savings_goal?: number;
+    emergency_contact?: string;
+    blood_group?: string;
+    address?: string;
+    notes?: string;
+  };
 }
 
 interface MemberStats {
@@ -39,6 +54,8 @@ export default function FamilyMemberDashboard() {
     transactionCount: 0,
   });
   const [loading, setLoading] = useState(true);
+  const [monthlyTrend, setMonthlyTrend] = useState<Array<{ month: string; income: number; expenses: number }>>([]);
+  const [categoryBreakdown, setCategoryBreakdown] = useState<Array<{ category: string; amount: number }>>([]);
 
   useEffect(() => {
     trackPageView(`/family/${memberId}/dashboard`);
@@ -91,6 +108,49 @@ export default function FamilyMemberDashboard() {
         netAmount: income - expenses,
         transactionCount: transactions?.length || 0,
       });
+
+      // Fetch monthly trend data for charts
+      const { data: allTransactions } = await supabase
+        .from("transactions")
+        .select("amount, type, timestamp, category_id, categories(name)")
+        .eq("family_member_id", memberId)
+        .order("timestamp", { ascending: true });
+
+      if (allTransactions) {
+        // Group by month
+        const monthlyData: { [key: string]: { income: number; expenses: number } } = {};
+        allTransactions.forEach((t) => {
+          const month = new Date(t.timestamp).toLocaleDateString("en", { month: "short", year: "numeric" });
+          if (!monthlyData[month]) {
+            monthlyData[month] = { income: 0, expenses: 0 };
+          }
+          if (t.type === "income") {
+            monthlyData[month].income += Number(t.amount);
+          } else {
+            monthlyData[month].expenses += Number(t.amount);
+          }
+        });
+
+        setMonthlyTrend(Object.entries(monthlyData).map(([month, data]) => ({
+          month,
+          income: data.income,
+          expenses: data.expenses,
+        })));
+
+        // Category breakdown
+        const categoryData: { [key: string]: number } = {};
+        allTransactions.forEach((t) => {
+          if (t.type === "expense" && t.categories) {
+            const category = t.categories.name;
+            categoryData[category] = (categoryData[category] || 0) + Number(t.amount);
+          }
+        });
+
+        setCategoryBreakdown(Object.entries(categoryData).map(([category, amount]) => ({
+          category,
+          amount,
+        })));
+      }
     } catch (error: any) {
       toast.error("Failed to load member data", {
         description: error.message,
@@ -127,6 +187,8 @@ export default function FamilyMemberDashboard() {
       .toUpperCase();
   };
 
+  const metadata = member?.metadata || {};
+
   return (
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-8 max-w-7xl">
@@ -141,31 +203,110 @@ export default function FamilyMemberDashboard() {
             Back to Family
           </Button>
 
-          <div className="flex items-center gap-4">
-            <Avatar className="w-20 h-20 border-4 border-primary/20 hover:border-primary/40 transition-colors">
+          <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
+            <Avatar className="w-24 h-24 border-4 border-primary/20 hover:border-primary/40 transition-colors">
               <AvatarImage src={member.avatar_url || undefined} />
-              <AvatarFallback className="text-2xl">{getInitials(member.name)}</AvatarFallback>
+              <AvatarFallback className="text-3xl">{getInitials(member.name)}</AvatarFallback>
             </Avatar>
-            <div>
-              <h1 className="text-3xl font-bold">{member.name}</h1>
-              <div className="flex items-center gap-2 mt-1">
-                <Badge variant="outline">{member.relationship}</Badge>
+            <div className="flex-1">
+              <h1 className="text-4xl font-bold">{member.name}</h1>
+              <div className="flex flex-wrap items-center gap-2 mt-2">
+                <Badge variant="outline" className="text-sm">{member.relationship}</Badge>
                 {member.is_alive !== null && (
                   <Badge variant={member.is_alive ? "default" : "secondary"}>
                     {member.is_alive ? "Active" : "Inactive"}
                   </Badge>
                 )}
+                {member.date_of_birth && (
+                  <Badge variant="secondary" className="gap-1">
+                    <Calendar className="w-3 h-3" />
+                    {new Date().getFullYear() - new Date(member.date_of_birth).getFullYear()} years
+                  </Badge>
+                )}
               </div>
-              {member.email && (
-                <p className="text-sm text-muted-foreground mt-1">{member.email}</p>
-              )}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mt-3 text-sm text-muted-foreground">
+                {member.email && (
+                  <div className="flex items-center gap-2">
+                    <Mail className="w-4 h-4" />
+                    <span>{member.email}</span>
+                  </div>
+                )}
+                {metadata.phone && (
+                  <div className="flex items-center gap-2">
+                    <Phone className="w-4 h-4" />
+                    <span>{metadata.phone}</span>
+                  </div>
+                )}
+                {metadata.occupation && (
+                  <div className="flex items-center gap-2">
+                    <Briefcase className="w-4 h-4" />
+                    <span>{metadata.occupation}</span>
+                  </div>
+                )}
+                {metadata.blood_group && (
+                  <div className="flex items-center gap-2">
+                    <Droplet className="w-4 h-4" />
+                    <span>Blood: {metadata.blood_group}</span>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>
 
-        {/* Stats Cards */}
+        {/* AdSense Ad */}
+        <div className="mb-8 animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
+          <AdSense slot="YOUR_FAMILY_DASHBOARD_AD_SLOT" />
+        </div>
+
+        {/* Detailed Info Cards */}
+        {(metadata.address || metadata.emergency_contact || metadata.notes) && (
+          <div className="grid gap-4 md:grid-cols-3 mb-8 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
+            {metadata.address && (
+              <Card className="hover:shadow-lg transition-shadow">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-sm flex items-center gap-2">
+                    <MapPin className="w-4 h-4" />
+                    Address
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm">{metadata.address}</p>
+                </CardContent>
+              </Card>
+            )}
+            {metadata.emergency_contact && (
+              <Card className="hover:shadow-lg transition-shadow">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-sm flex items-center gap-2">
+                    <AlertCircle className="w-4 h-4 text-destructive" />
+                    Emergency Contact
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm">{metadata.emergency_contact}</p>
+                </CardContent>
+              </Card>
+            )}
+            {metadata.notes && (
+              <Card className="hover:shadow-lg transition-shadow">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-sm flex items-center gap-2">
+                    <User className="w-4 h-4" />
+                    Notes
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm">{metadata.notes}</p>
+                </CardContent>
+              </Card>
+            )}
+          </div>
+        )}
+
+        {/* Financial Stats Cards */}
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 mb-8">
-          <Card className="animate-fade-in-up hover:shadow-lg transition-shadow" style={{ animationDelay: '0.1s' }}>
+          <Card className="animate-fade-in-up hover:shadow-lg transition-shadow" style={{ animationDelay: '0.3s' }}>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Total Income</CardTitle>
               <TrendingUp className="h-4 w-4 text-success" />
@@ -173,10 +314,13 @@ export default function FamilyMemberDashboard() {
             <CardContent>
               <div className="text-2xl font-bold text-success">₹{stats.totalIncome.toFixed(2)}</div>
               <p className="text-xs text-muted-foreground">Last 30 days</p>
+              {metadata.income && (
+                <p className="text-xs text-muted-foreground mt-1">Monthly Target: ₹{metadata.income}</p>
+              )}
             </CardContent>
           </Card>
 
-          <Card className="animate-fade-in-up hover:shadow-lg transition-shadow" style={{ animationDelay: '0.2s' }}>
+          <Card className="animate-fade-in-up hover:shadow-lg transition-shadow" style={{ animationDelay: '0.4s' }}>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Total Expenses</CardTitle>
               <TrendingDown className="h-4 w-4 text-destructive" />
@@ -184,12 +328,15 @@ export default function FamilyMemberDashboard() {
             <CardContent>
               <div className="text-2xl font-bold text-destructive">₹{stats.totalExpenses.toFixed(2)}</div>
               <p className="text-xs text-muted-foreground">Last 30 days</p>
+              {metadata.expenses && (
+                <p className="text-xs text-muted-foreground mt-1">Budget: ₹{metadata.expenses}</p>
+              )}
             </CardContent>
           </Card>
 
-          <Card className="animate-fade-in-up hover:shadow-lg transition-shadow" style={{ animationDelay: '0.3s' }}>
+          <Card className="animate-fade-in-up hover:shadow-lg transition-shadow" style={{ animationDelay: '0.5s' }}>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Net Amount</CardTitle>
+              <CardTitle className="text-sm font-medium">Net Savings</CardTitle>
               <DollarSign className="h-4 w-4 text-primary" />
             </CardHeader>
             <CardContent>
@@ -200,29 +347,73 @@ export default function FamilyMemberDashboard() {
             </CardContent>
           </Card>
 
-          <Card className="animate-fade-in-up hover:shadow-lg transition-shadow" style={{ animationDelay: '0.4s' }}>
+          <Card className="animate-fade-in-up hover:shadow-lg transition-shadow" style={{ animationDelay: '0.6s' }}>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Transactions</CardTitle>
-              <Calendar className="h-4 w-4 text-muted-foreground" />
+              <CardTitle className="text-sm font-medium">Savings Goal</CardTitle>
+              <Target className="h-4 w-4 text-primary" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{stats.transactionCount}</div>
-              <p className="text-xs text-muted-foreground">Last 30 days</p>
+              {metadata.savings_goal ? (
+                <>
+                  <div className="text-2xl font-bold text-primary">₹{metadata.savings_goal}</div>
+                  <p className="text-xs text-muted-foreground">
+                    {stats.netAmount >= 0 ? 
+                      `${((stats.netAmount / metadata.savings_goal) * 100).toFixed(1)}% achieved` :
+                      'Keep saving!'
+                    }
+                  </p>
+                </>
+              ) : (
+                <>
+                  <div className="text-2xl font-bold">{stats.transactionCount}</div>
+                  <p className="text-xs text-muted-foreground">Total Transactions</p>
+                </>
+              )}
             </CardContent>
           </Card>
         </div>
 
+        {/* Charts Section */}
+        <div className="mb-8 animate-fade-in-up" style={{ animationDelay: '0.7s' }}>
+          <EnhancedFinancialCharts 
+            monthlyTrend={monthlyTrend}
+            categoryBreakdown={categoryBreakdown}
+          />
+        </div>
+
+        {/* AdSense Ad */}
+        <div className="mb-8 animate-fade-in-up" style={{ animationDelay: '0.8s' }}>
+          <AdSense slot="YOUR_FAMILY_DASHBOARD_AD_SLOT_2" format="horizontal" />
+        </div>
+
+        <div className="grid gap-6 md:grid-cols-2 mb-8">
+          {/* Budget Alerts */}
+          <div className="animate-fade-in-up" style={{ animationDelay: '0.9s' }}>
+            <BudgetAlerts />
+          </div>
+
+          {/* Financial Tips */}
+          <div className="animate-fade-in-up" style={{ animationDelay: '1s' }}>
+            <FinancialTips />
+          </div>
+        </div>
+
         {/* Recent Transactions */}
-        <div className="animate-fade-in-up" style={{ animationDelay: '0.5s' }}>
+        <div className="animate-fade-in-up" style={{ animationDelay: '1.1s' }}>
           <Card>
             <CardHeader>
               <CardTitle>Recent Transactions</CardTitle>
-              <CardDescription>Transactions for {member.name}</CardDescription>
+              <CardDescription>All transactions for {member.name}</CardDescription>
             </CardHeader>
             <CardContent>
-              <RecentTransactions familyMemberId={memberId} limit={10} />
+              <RecentTransactions familyMemberId={memberId} limit={20} />
             </CardContent>
           </Card>
+        </div>
+
+        {/* AdSense Ad */}
+        <div className="mt-8 animate-fade-in-up" style={{ animationDelay: '1.2s' }}>
+          <AdSense slot="YOUR_FAMILY_DASHBOARD_AD_SLOT_3" />
         </div>
       </div>
     </div>

@@ -159,8 +159,8 @@ const Family = () => {
                   <DialogHeader>
                     <DialogTitle>Add Family Member</DialogTitle>
                     <DialogDescription>
-                      Add a family member to track their finances (without email invitation)
-                    </DialogDescription>
+                    Add comprehensive family member details including personal info, financial data, and emergency contacts
+                  </DialogDescription>
                   </DialogHeader>
                   <form onSubmit={handleSubmit} className="space-y-4">
                     <div className="space-y-2">
