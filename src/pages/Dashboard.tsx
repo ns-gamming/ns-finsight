@@ -294,6 +294,10 @@ const Dashboard = () => {
             </div>
 
             <div className="mb-8">
+              <AdSense slot="2345678901" format="horizontal" />
+            </div>
+
+            <div className="mb-8">
               <OrderTracking />
             </div>
 

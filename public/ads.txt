@@ -1,1 +1,4 @@
 google.com, pub-4779140243670658, DIRECT, f08c47fec0942fa0
+# NS FinSight - AdSense Publisher ID Verification
+# Site: nsfinsight.xyz
+# Last Updated: 2025-01-12

@@ -45,7 +45,7 @@ export const AdSense = ({
           display: 'block',
           ...style 
         }}
-        data-ad-client={import.meta.env.VITE_ADSENSE_PUB_ID || 'ca-pub-0000000000000000'}
+        data-ad-client="ca-pub-4779140243670658"
         data-ad-slot={slot}
         data-ad-format={format}
         data-full-width-responsive={responsive ? 'true' : 'false'}

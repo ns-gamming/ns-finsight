@@ -154,8 +154,16 @@ const Privacy = () => {
                 <p>All data is stored securely on Supabase infrastructure with industry-standard encryption and backup protocols.</p>
               </div>
               <div>
-                <p className="font-semibold mb-1">Google AdSense (Optional):</p>
-                <p>We may display contextual ads via Google AdSense. These ads use cookies to provide relevant content. You can opt out in your browser settings.</p>
+                <p className="font-semibold mb-1">Google AdSense:</p>
+                <p className="mb-2">We use Google AdSense (Publisher ID: ca-pub-4779140243670658) to display advertisements on our website. Google AdSense uses cookies and web beacons to:</p>
+                <ul className="list-disc ml-6 space-y-1">
+                  <li>Serve ads based on your prior visits to our website or other websites</li>
+                  <li>Measure ad performance and engagement</li>
+                  <li>Prevent the same ads from being shown too many times</li>
+                  <li>Detect and stop click fraud</li>
+                </ul>
+                <p className="mt-2">Google's use of advertising cookies enables it and its partners to serve ads to you based on your visit to our site and/or other sites on the Internet.</p>
+                <p className="mt-2">You can opt out of personalized advertising by visiting <a href="https://www.google.com/settings/ads" target="_blank" rel="noopener noreferrer" className="text-primary underline">Google Ads Settings</a> or <a href="http://www.aboutads.info/choices/" target="_blank" rel="noopener noreferrer" className="text-primary underline">aboutads.info</a>.</p>
               </div>
             </CardContent>
           </Card>
@@ -179,6 +187,63 @@ const Privacy = () => {
               <p><strong>Right to Export:</strong> Download all your data in CSV/JSON format</p>
               <p><strong>Right to Opt-Out:</strong> Disable analytics and ad personalization</p>
               <p className="pt-2">To exercise these rights, contact us at: <strong>privacy@nsfinsight.app</strong></p>
+            </CardContent>
+          </Card>
+
+          <Card className="shadow-card animate-fade-in">
+            <CardHeader>
+              <div className="flex items-center gap-3">
+                <div className="p-2 rounded-lg bg-gradient-to-br from-blue-500 to-purple-500">
+                  <Shield className="w-6 h-6 text-white" />
+                </div>
+                <div>
+                  <CardTitle>Google AdSense & Advertising</CardTitle>
+                  <CardDescription>How we use advertising services</CardDescription>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent className="space-y-3 text-sm">
+              <div>
+                <p className="font-semibold mb-2">AdSense Publisher Information:</p>
+                <p>Publisher ID: <code className="bg-muted px-2 py-1 rounded">ca-pub-4779140243670658</code></p>
+                <p>Website: nsfinsight.xyz</p>
+              </div>
+              <div>
+                <p className="font-semibold mb-2">What Google AdSense Collects:</p>
+                <ul className="list-disc ml-6 space-y-1">
+                  <li>Cookies and similar tracking technologies</li>
+                  <li>IP address (anonymized)</li>
+                  <li>Browser type and version</li>
+                  <li>Device information</li>
+                  <li>Pages visited and time spent</li>
+                  <li>Ad interactions (clicks, views)</li>
+                </ul>
+              </div>
+              <div>
+                <p className="font-semibold mb-2">Third-Party Advertising Partners:</p>
+                <p>Google and its partners may use your data to:</p>
+                <ul className="list-disc ml-6 space-y-1">
+                  <li>Personalize ads based on your interests</li>
+                  <li>Measure ad effectiveness</li>
+                  <li>Provide aggregated reporting to advertisers</li>
+                  <li>Detect and prevent fraud</li>
+                </ul>
+              </div>
+              <div>
+                <p className="font-semibold mb-2">Your Advertising Choices:</p>
+                <p>• <a href="https://www.google.com/settings/ads" target="_blank" rel="noopener noreferrer" className="text-primary underline">Google Ads Settings</a> - Manage personalized ads</p>
+                <p>• <a href="https://adssettings.google.com" target="_blank" rel="noopener noreferrer" className="text-primary underline">Google Ad Personalization</a> - Turn off ad personalization</p>
+                <p>• <a href="http://www.aboutads.info/choices/" target="_blank" rel="noopener noreferrer" className="text-primary underline">Digital Advertising Alliance</a> - Industry-wide opt-out</p>
+                <p>• <a href="https://www.youronlinechoices.com/" target="_blank" rel="noopener noreferrer" className="text-primary underline">Your Online Choices</a> - European opt-out tool</p>
+              </div>
+              <div className="pt-2 border-t">
+                <p className="text-xs text-muted-foreground">
+                  For more information about Google's advertising practices and privacy policies, please visit: 
+                  <a href="https://policies.google.com/technologies/ads" target="_blank" rel="noopener noreferrer" className="text-primary underline ml-1">
+                    Google Advertising Policies
+                  </a>
+                </p>
+              </div>
             </CardContent>
           </Card>
 

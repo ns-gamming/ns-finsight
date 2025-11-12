@@ -10,6 +10,7 @@ import analyticsImage from "@assets/generated_images/Financial_Dashboard_Analyti
 import mobileImage from "@assets/generated_images/Mobile_Expense_Tracking_UI_01b29df1.png";
 import professionalPlanningImage from "@assets/generated_images/Professional_Financial_Planning_172b0daa.png";
 import growthVisualizationImage from "@assets/generated_images/Financial_Growth_Visualization_536e03fa.png";
+import { AdSense } from "@/components/AdSense"; // Import AdSense component
 
 const Index = () => {
   const navigate = useNavigate();
@@ -202,18 +203,18 @@ const Index = () => {
               <Sparkles className="w-4 h-4 mr-2" />
               AI-Powered Financial Insights • Trusted by 10,000+ Users
             </div>
-            
+
             <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight animate-fade-in-up">
               Take Control of Your
               <span className="block mt-2 bg-gradient-to-r from-primary via-primary/80 to-success bg-clip-text text-transparent animate-gradient-shift bg-[length:200%_auto]">
                 Financial Future
               </span>
             </h1>
-            
+
             <p className="text-xl md:text-2xl text-muted-foreground mb-10 max-w-3xl mx-auto animate-fade-in-up leading-relaxed" style={{ animationDelay: "0.2s" }}>
               Track expenses, analyze spending patterns, and get AI-powered insights to make smarter financial decisions. Built for individuals and families.
             </p>
-            
+
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12 animate-fade-in-up" style={{ animationDelay: "0.3s" }}>
               <Button 
                 size="lg" 
@@ -257,6 +258,11 @@ const Index = () => {
         </div>
       </section>
 
+      {/* AdSense Ad Unit - After Hero Section */}
+      <div className="container mx-auto px-4 py-8">
+        <AdSense slot="YOUR_AdSense_Slot_ID_1" /> {/* Replace with your actual AdSense slot ID */}
+      </div>
+
       {/* Features Grid */}
       <section id="features" className="py-24 bg-gradient-to-b from-background to-muted/20">
         <div className="container mx-auto px-4">
@@ -287,6 +293,11 @@ const Index = () => {
           </div>
         </div>
       </section>
+
+      {/* AdSense Ad Unit - After Features Section */}
+      <div className="container mx-auto px-4 py-8">
+        <AdSense slot="YOUR_AdSense_Slot_ID_2" /> {/* Replace with your actual AdSense slot ID */}
+      </div>
 
       {/* Feature Showcases with Images */}
       <section className="py-24 bg-background">
@@ -395,6 +406,11 @@ const Index = () => {
         </div>
       </section>
 
+      {/* AdSense Ad Unit - After Feature Showcases */}
+      <div className="container mx-auto px-4 py-8">
+        <AdSense slot="YOUR_AdSense_Slot_ID_3" /> {/* Replace with your actual AdSense slot ID */}
+      </div>
+
       {/* Testimonials */}
       <section className="py-24 bg-gradient-to-b from-muted/20 to-background">
         <div className="container mx-auto px-4">
@@ -436,23 +452,23 @@ const Index = () => {
       <section className="py-24 relative overflow-hidden">
         {/* Background gradient */}
         <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-success/5 to-warning/10"></div>
-        
+
         <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-4xl mx-auto text-center">
             <div className="inline-block px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium mb-6 animate-scale-in">
               <Lock className="w-4 h-4 inline mr-2" />
               Secure • Private • Free
             </div>
-            
+
             <h2 className="text-4xl md:text-5xl font-bold mb-6 animate-fade-in-up">
               Ready to Transform Your
               <span className="block gradient-text mt-2">Financial Life?</span>
             </h2>
-            
+
             <p className="text-xl text-muted-foreground mb-10 max-w-2xl mx-auto animate-fade-in-up" style={{ animationDelay: "0.1s" }}>
               Join thousands of users who are already taking control of their finances with NS FinSight. Start your journey today—completely free!
             </p>
-            
+
             <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in-up" style={{ animationDelay: "0.2s" }}>
               <Button 
                 size="lg" 
@@ -500,6 +516,11 @@ const Index = () => {
         </div>
       </section>
 
+      {/* AdSense Ad Unit - Before Footer */}
+      <div className="container mx-auto px-4 py-8">
+        <AdSense slot="YOUR_AdSense_Slot_ID_4" /> {/* Replace with your actual AdSense slot ID */}
+      </div>
+
       {/* Footer */}
       <footer className="border-t border-border bg-card/50 backdrop-blur-sm">
         <div className="container mx-auto px-4 py-12">
@@ -524,7 +545,7 @@ const Index = () => {
                 Your complete financial command center. Track, analyze, and optimize your financial life.
               </p>
             </div>
-            
+
             <div>
               <h4 className="font-semibold mb-4">Product</h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
@@ -534,7 +555,7 @@ const Index = () => {
                 <li className="hover:text-foreground transition-colors cursor-pointer">Updates</li>
               </ul>
             </div>
-            
+
             <div>
               <h4 className="font-semibold mb-4">Company</h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
@@ -544,7 +565,7 @@ const Index = () => {
                 <li className="hover:text-foreground transition-colors cursor-pointer">Contact</li>
               </ul>
             </div>
-            
+
             <div>
               <h4 className="font-semibold mb-4">Legal</h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
@@ -564,7 +585,7 @@ const Index = () => {
               </ul>
             </div>
           </div>
-          
+
           <div className="border-t border-border pt-8 text-center text-sm text-muted-foreground">
             <p>© 2025 NS FinSight. Built with privacy and security in mind. All rights reserved.</p>
           </div>

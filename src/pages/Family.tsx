@@ -12,6 +12,7 @@ import { toast } from "sonner";
 import { ArrowLeft, UserPlus, Users, Calendar, Mail, Eye } from "lucide-react";
 import { FamilyInvite } from "@/components/FamilyInvite";
 import { useAnalytics } from "@/hooks/useAnalytics";
+import { AdSense } from "@/components/AdSense";
 
 // Assuming logoImage is imported from an image file path, e.g., import logoImage from '@/assets/logo.png';
 
